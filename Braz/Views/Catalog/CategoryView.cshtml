@@ -1,0 +1,23 @@
+﻿@{ 
+    List<Braz.Models.SubCategory> list = (List<Braz.Models.SubCategory>)ViewData["CatList"];
+    Braz.Models.Category parent = (Braz.Models.Category)ViewData["Parent"];
+    string SubName = (string)ViewData["SubName"];
+}
+<div id="cat_list">
+    <h6>@(parent.Name)<div class="line"></div></h6>
+    <ul class="cat_list">
+
+        @foreach(Braz.Models.SubCategory category in list)
+        {
+                       string style = category.Name == SubName ? "background-color:rgb(91, 192, 222)" : "";
+            <li>@Ajax.ActionLink(category.Name, (parent.Id > 4) ? "TableView" : "ListView", new { catid = category.Id }, new AjaxOptions { HttpMethod = "GET", InsertionMode = InsertionMode.Replace, UpdateTargetId = "partview", OnSuccess = "cascade(" + parent.Id + ",'" + category.Name + "');updatefilters(" + category.Id.ToString() + ");" }, new { @style = style })</li>
+
+        }
+     </ul>
+</div>
+
+
+
+
+
+

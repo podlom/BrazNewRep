@@ -1,0 +1,37 @@
+﻿@{ 
+    Braz.Models.SubCategory category = (Braz.Models.SubCategory)ViewData["Category"];
+}
+<div id="inlinemodal">
+    <div class="modal fade" id="AddInlineModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Добавить позицию</h4>
+                </div>
+                <div class="modal-body container-fluid">
+                @using (Html.BeginForm("AddInlineProduct", "Catalog", new { catid = category.Id }, FormMethod.Post, new { @style = "padding: 0 20px", @enctype = "multipart/form-data" }))
+                {
+                    <div class="row">
+                        <div class="col-md-6" style="padding-left: 30px;">
+                            <input id="editimages" type="file" name="image" hidden style="display:none">
+                            <label class="btn btn-info" for="editimages">Новая фотография(не обязательно)</label>
+                        </div>
+                        <div class="col-md-6" style="padding-left: -20px;">
+                            <input id="editimages2" type="file" name="image2" hidden style="display:none">
+                            <label class="btn btn-info" for="editimages2">Новая фотография(не обязательно)</label>
+                        </div>
+                    </div>
+                    foreach (Braz.Models.Parameter param in category.Params)
+                    {
+                            <div class="col-md-6">
+                            <input type="text" name="@(param.Key + Braz.Controllers.CatalogController.ParamType(param.Key))" placeholder="@(param.Key)" required>
+                        </div>
+                        }
+                        <input type="submit" class="submit" value="Добавить">
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

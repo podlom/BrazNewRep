@@ -1,0 +1,64 @@
+﻿@using Braz.Models;
+@{
+    List<Item> ItemList = (List<Item>)ViewData["Items"];
+    SubCategory SubCat = (SubCategory)ViewData["SubCategory"];
+}
+
+
+<div class="nonst_view">
+    <div class="shop_item">
+        <div class="img_block" style=" background-image: url('Content/img/catalog/cat-@(SubCat.Id.ToString())/2.jpg');" onMouseOver="this.style.backgroundImage = 'url(\'Content/img/catalog/cat-@(SubCat.Id.ToString())/1.jpg\')' " onMouseOut="this.style.backgroundImage = 'url(\'Content/img/catalog/cat-@(SubCat.Id.ToString())/2.jpg\')' ">
+            <div class="title">
+                @(SubCat.Name)
+            </div>
+           <!-- <img src="Content/img/catalog/cat-@(SubCat.Id.ToString())/2.jpg" class="img-responsive" alt="">
+            <img src="Content/img/catalog/cat-@(SubCat.Id.ToString())/1.jpg" class="img-responsive" alt=""> -->
+        </div>
+<div class="table-responsive">
+        <table class="table table-hover table-bordered nonst_table">
+            <thead>
+                <tr>
+                    @foreach(Parameter param in SubCat.Params)
+                    { 
+                        <th class="text-center">@param.Value</th>
+                    }
+                    @if (Session["User"] != HttpContext.Current.Application["Admin"])
+                    {
+                        <th class="text-center">Заказать</th>
+                    }
+                    else
+                    {
+                        <th class="text-center">Администрирование</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Item item in ItemList)
+                {
+                    <tr>
+                        @foreach (DataSet set in item.Data)
+                        {
+                            <th class="text-center">@(set.Quantity)</th>
+                        }
+                        @if (Session["User"] != HttpContext.Current.Application["Admin"])
+                        {
+                            <th class="text-center"> <button id="buybutton" data-action="buy" data-id="@(item.Id.ToString())" data-toggle="modal" data-target="#buyModal"  style="width:40%;"><i class="fa fa-cart-plus"></i></button></th>
+                        }
+                        else
+                        {
+                            <th class="text-center">
+                                <button id="editbutton" data-action="edit" data-toggle="modal" data-target="#editModal" data-id="@(item.Id.ToString())"><i class="fa fa-wrench"></i></button>
+                                <button id="deletebutton" data-action="delete" data-toggle="modal" data-target="#deleteModal" data-id="@(item.Id.ToString())"><i class="fa fa-minus-square"></i></button>
+                            </th>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+</div>
+        @if ((Session["User"] as User) == HttpContext.Current.Application["Admin"] as User)
+            {<button id="addbutton" data-cat="@(SubCat.Id.ToString())" class="btn btn-success" data-toggle="modal" data-target="#addModalLine">Добавить</button>}
+    </div>
+</div>
+
+

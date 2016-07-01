@@ -1,0 +1,80 @@
+﻿section{
+	width:100%;
+}
+.block{
+	margin-left: auto;
+	margin-right: auto;
+	width: 700px;
+	height: auto;
+	border: 1px solid blue;
+	border-radius: 30px;
+	margin-bottom: 60px;
+}
+.block *{
+	margin-bottom: 10px;
+}
+.block h1,.block p,.block h3,.block {
+	text-align: center;
+}
+.block a,.block a:visited,.block a:link{
+	color: black;
+	text-decoration: none;
+}
+.block input{
+width:80%;
+}
+[id^="file"]{
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+.block textarea{
+	width:90%;
+	height: 500px;
+	resize:none;
+}
+.block button{
+	display: inline-block;
+}
+.block a{
+	margin-left: 150px;
+}
+section div h1{
+	text-align: center;
+}
+.addition *{
+	margin-top: 20px;
+	
+}
+.form-cent {
+    text-align:center;
+}
+.mgt12 {
+    margin-top: 12px;
+}
+.admin-buttons{
+    width:160px;
+    margin:0 10px 20px 10px;
+}
+.admin-reg-input {
+    box-shadow: 0 0 5px rgba(159,210,214,1);
+    border-color: rgba(159,210,214,1);
+}
+.admin-form {
+    width:400px;
+    position: fixed;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+    text-align:center;
+}
+.mgb20{
+    margin-bottom:20px;
+}
+.date{
+    width:65px !important;
+    text-align:center;
+}

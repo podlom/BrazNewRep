@@ -1,0 +1,113 @@
+﻿@model List<Braz.Models.Vacancy>
+
+@{
+    ViewBag.Title = "Редактирование вакансий";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<section>
+    <div>
+        <h1>Редактирование вакансий</h1>
+        <a class="btn btn-danger" style="left:30px;position:fixed;" href="/admin">Назад</a>
+
+        <div class="block addition">
+            <input id="reqinp" type="number" placeholder="Количество требований" />
+            <input id="dutinp" type="number" placeholder="Количество обязанностей" />
+            <span id="addbutton" class="btn btn-info">Добавить вакансию</span>
+        </div>
+
+
+        <h1>Список всех вакансий</h1>
+            @foreach (Braz.Models.Vacancy vac in Model)
+            {
+
+                <div class="block">
+                    <form action=@("/Admin/UpdateVacancy?vac="+vac.Id.ToString()+"&req="+vac.Requirements.Count+"&dut="+vac.Duties.Count) method="post" style="text-align:center">
+                        <p>Заголовок -<input name="header" value="@vac.Header" required /></p>
+                        <h5>Описание</h5>
+                        <textarea name="descr" required>@vac.Description</textarea><br />
+                        <p>Зарплата - <input name="salary" value="@vac.Salary" required /></p><br />
+                        <p>Ссылка - <input name="url" value="@vac.Url" required /></p><br />
+                        <p>Место - <select name="type" required>
+                            <option @(vac.Type==0?"selected":"") >Офис</option>
+                            <option @(vac.Type==1?"selected":"")>Производство</option>
+                        </select></p>
+                        @for (int i = 0; i < vac.Requirements.Count; i++)
+                        {
+                            <p>Требование - <input name=@("req"+i.ToString()) required value="@vac.Requirements[i]" /></p>
+                        }
+                        @for (int i = 0; i < vac.Duties.Count; i++)
+                        {
+                            <p>Обязанность - <input name=@("dut"+i.ToString()) required value="@vac.Duties[i]" /></p>
+                        }
+                        <input type="submit" class="btn btn-success" value="Обновить вакансию" />
+                    </form>
+                    @Html.ActionLink("Удалить вакансию", "DeleteVacancy", "Admin", new { vacid = vac.Id }, new { @class = "btn btn-danger", @style="width:80%; margin:auto;" })
+
+
+
+                </div>
+            }
+    </div>
+</section>
+
+<div id="Vacancy">
+    <div class="modal fade" id="AddVacancy" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Добавление вакансии</h4>
+                </div>
+                <div class="modal-body container-fluid">
+                    <form id="addvacancyform" action="/admin/AddVacancy" method="post" style="text-align:center">
+                        <input name="header" placeholder="Заголовок" required/><br />
+                        <textarea name="descr" placeholder="Подробнее" required></textarea><br />
+                        <input name="url" placeholder="Url" required /><br />
+                        <input name="salary" placeholder="Зарплата" required/><br />
+                        <select name="type" required>
+                            <option>Офис</option>
+                            <option>Производство</option>
+                        </select>
+                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/vendor.min.js"></script>
+<script>
+    $(document).on("click", "#addbutton", function () {
+        var req = $("#reqinp").val();
+        var dut = $("#dutinp").val();
+        if (req == "" || dut == "" || req < 0 || dut < 0) {
+            alert("Поля требования и обязанности не могут быть пустыми");
+            return;
+        }
+        $("#addvacancyform").attr("action", "/Admin/AddVacancy?req=" + req + "&dut=" + dut);
+        for (var i = 0; i < req; i++) {
+            $("#addvacancyform").append("<input name='req"+i+"' placeholder='Требование' required /><br/>");
+        }
+        for (var i = 0; i < dut; i++) {
+            $("#addvacancyform").append("<input name='dut" + i + "' placeholder='Обязанность' required /><br/>");
+        }
+        $("#addvacancyform").append("<input type='submit' class='btn btn-success' value='Добавить вакансию'/>");
+        $("#AddVacancy").modal("show");
+    });
+</script>
+<style>
+    input,select{
+        width:400px;
+    }
+    textarea{
+        width:400px;
+        height:150px;
+    }
+    input,textarea,select{
+        margin-bottom:15px;
+    }
+    .block{
+        padding-top:20px;
+    }
+</style>

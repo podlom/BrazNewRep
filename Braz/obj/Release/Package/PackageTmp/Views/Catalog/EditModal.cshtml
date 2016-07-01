@@ -1,0 +1,37 @@
+﻿@{ 
+    Braz.Models.Item item = (Braz.Models.Item)ViewData["Item"];
+}
+<div id="editmodal">
+    <div class="modal fade" id="EditItemModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Изменить позицию</h4>
+                </div>
+                <div class="modal-body container-fluid">
+                    @using (Html.BeginForm("EditProduct", "Catalog", new { ItemId = item.Id }, FormMethod.Post, new { @style = "padding: 0 20px", @enctype = "multipart/form-data" }))
+                    {
+                        <div class="row">
+                            <div class="col-md-6" style="padding-left: 30px;">
+                                <input id="editimages" type="file" name="image" hidden style="display:none">
+                                <label class="btn btn-info" for="editimages">Новая фотография(не обязательно)</label>
+                            </div>
+                            <div class="col-md-6" style="padding-left: -20px;">
+                                <input id="editimages2" type="file" name="image2" hidden style="display:none">
+                                <label class="btn btn-info" for="editimages2">Новая фотография(не обязательно)</label>
+                            </div>
+                        </div>
+                        foreach (Braz.Models.DataSet set in item.Data)
+                        {
+                            <div class="col-md-6">
+                                <input type="text" name="@(set.Type.Key+Braz.Controllers.CatalogController.ParamType(set.Type.Key))" value="@(set.Quantity)" placeholder="@(set.Type.Key)" required>
+                            </div>
+                        }
+                        <input type="submit" class="submit" value="Изменить">
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

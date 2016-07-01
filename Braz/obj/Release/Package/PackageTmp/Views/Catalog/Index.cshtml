@@ -1,0 +1,239 @@
+﻿@using Braz.Models;
+<button id="catMenuToggler">Выбрать категорию</button>
+@{
+    ViewBag.Title = "Каталог";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<SubCategory> SubList = (List<SubCategory>)ViewData["CatList"];
+    List<int> SoloCategoryList = SubList.Where(x => x.Id == x.Parent.Id).ToList().Select(x => x.Id).ToList();
+}
+@section PageStyle{
+<link rel="stylesheet" href="~/Content/css/jquery-ui.min.css" />
+}
+
+<ul class="cat_menu">
+    @foreach (Category cat in SubList.Select(x => x.Parent).Distinct(new CategoryEqualityComparer()).ToList())
+    {
+        <li>
+            @if (SoloCategoryList.Contains(cat.Id))
+            {
+                if ((User)Session["User"] == (User)HttpContext.Current.Application["Admin"] && cat.Id > 4)
+                {
+                    string addmod = "AddModal" + cat.Id.ToString();
+                    <span data-cat="@(cat.Id.ToString())" data-toggle="modal" data-target="#@addmod">Добавить</span>
+                   
+                }
+                @Ajax.ActionLink(cat.Name, (cat.Id > 4) ? "TableView" : "ListView", new { catid = cat.Id.ToString() }, new AjaxOptions { HttpMethod = "GET", InsertionMode = InsertionMode.Replace, UpdateTargetId = "partview", OnSuccess = "clearside();updatefilters(" + cat.Id.ToString() + ");" })
+                
+            }
+            else
+            {
+                string table = (cat.Id > 4) ? "TableView" : "ListView";
+                <a href="#">@(cat.Name) <div class="line"></div></a>
+                <ul>
+                    @foreach (SubCategory subcat in SubList.Where(x => x.Parent.Id == cat.Id))
+                    {
+                        <li>
+                            @{if ((User)Session["User"] == (User)HttpContext.Current.Application["Admin"] && cat.Id > 4)
+                                {
+                                    string addmod = "AddModal" + subcat.Id.ToString();
+                                    <span data-cat="@(subcat.Id.ToString())" data-toggle="modal" data-target="#@addmod">Добавить</span>
+                                }
+                            }
+                            @Ajax.ActionLink(subcat.Name, table, new { catid = subcat.Id }, new AjaxOptions { HttpMethod = "GET", InsertionMode = InsertionMode.Replace, UpdateTargetId = "partview", OnSuccess = "cascade(" + subcat.Parent.Id + ",'"+subcat.Name+ "');updatefilters(" + subcat.Id.ToString() + ");" })
+                        </li>
+                    }
+                </ul>
+            }
+        </li>
+    }
+</ul>
+
+<aside class="hideMob">
+    <div id="cat_list">
+
+    </div>
+    <div>
+        <h6>Поиск<div class="line"></div></h6>
+        <input id="artseek" type="text" class="form-control" placeholder="Артикул">
+        <button class="btn btn-info" onclick="searcharticle()" style="width:40%;margin-left:30%;">Искать</button><br />
+        <br />
+        <div id="filter">
+
+        </div>
+    </div>
+</aside>
+
+
+<div id="partview">
+    <div id="initcat"></div>
+</div>
+
+
+<div class="loader">
+    <div class="loader_inner">
+        <!-- <i class="fa fa-cog"></i> -->
+    </div>
+</div>
+
+<!--PRODUCT IO MODALS-->
+
+<div id="groupmodal"></div>
+<div id="inlinemodal"></div>
+<div id="editmodal"></div>
+<div id="deletemodal"></div>
+<div id="buymodal"></div>
+
+
+
+
+<style>
+ .text-center{
+ text-align:center;
+}
+</style>
+
+
+
+@section page_script
+{
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script>
+        @if (ViewData["WithCat"]!=null && (bool)ViewData["WithCat"])
+        {
+            string table = ((SubCategory)ViewData["InitCat"]).Parent.Id > 4 ? "TableView" : "ListView";
+            string get = "/Catalog/" + table + "?catid=" + ((SubCategory)ViewData["InitCat"]).Id.ToString();
+            <text>
+        $(document).ready(function () {
+            $("#initcat").load('@get',function(data) {
+                $("#initcat").replaceWith(data);
+                cascade(@(((SubCategory)ViewData["InitCat"]).Parent.Id),"@(((SubCategory)ViewData["InitCat"]).Name)");
+                updatefilters(@(((SubCategory)ViewData["InitCat"]).Id))
+            });
+        });
+        </text>
+        }
+        $('span').click(function () {
+            var item = this;
+            var cat = item.getAttribute("data-cat");
+            if (cat != null) {
+                $("#groupmodal").load('/Catalog/GetAddGroupProduct?cat=' + cat, function (data) {
+                    $("#groupmodal").replaceWith(data);
+                    $("#AddGroupModal").modal("show");
+                });
+            }
+        });
+        $(document).on("click", "#addbutton", function () {
+            var item = this;
+            var cat = item.getAttribute("data-cat");
+            if(cat!=null){
+                $("#inlinemodal").load('/Catalog/GetAddInlineProduct?cat=' + cat, function (data) {
+                    $("#inlinemodal").replaceWith(data);
+                    $("#AddInlineModal").modal("toggle");
+                });
+            }
+        });
+        $(document).on("click", "#editbutton", function () {
+            var item = this;
+            var id = item.getAttribute("data-id");
+            if (id != null) {
+                $("#editmodal").load('/Catalog/GetEditProduct?itemid=' + id, function (data) {
+                    $("#editmodal").replaceWith(data);
+                    $("#EditItemModal").modal("toggle");
+                });
+            }
+        });
+        $(document).on("click", "#deletebutton", function () {
+            var item = this;
+            var id = item.getAttribute("data-id");
+            if (id != null) {
+                $("#deletemodal").load('/Catalog/GetDeleteProduct?itemid=' + id, function (data) {
+                    $("#deletemodal").replaceWith(data);
+                    $("#DeleteItemModal").modal("show");
+                });
+            }
+        });
+        $(document).on("click", "#buybutton", function () {
+            var item = this;
+            var id = item.getAttribute("data-id");
+            if (id != null) {
+                $("#buymodal").load('/Catalog/GetBuyProduct?itemid=' + id, function (data) {
+                    $("#buymodal").replaceWith(data);
+                    $("#BuyItemModal").modal("show");
+                });
+            }
+        });
+
+
+        function cascade(tmp,sub) {
+            $("#cat_list").load('/Catalog/UpdateAside?catid='+tmp+'&sub='+sub.split(' ').join('_'),(function (data) {
+                $('#cat_list').replaceWith(data);
+            }
+            ));
+            var text = $(".breadcrumbs").text();
+            var cat = "-> " + sub;
+            var result = text.substring(0, text.lastIndexOf("->"))+cat;
+            $(".breadcrumbs").text(result);
+        }
+        function clearside() {
+            $("#cat_list").empty();
+        }
+        
+        function updatefilters(cat){
+            $("#filter").load('/Catalog/UpdateFilters?catid='+cat,function (data) {
+                
+                $(document).off("click","#applyfilter");
+                $("#filter").replaceWith(data);
+            });
+        }
+        function clearfilters()
+        {
+            $("#filter").empty();
+        }
+        function clearmodal() {
+            $("#addModalLine form").trigger('reset');
+        }
+        function hidemodal() {
+            $("#editmodal").modal("hide");
+        }
+        function searcharticle() {
+            var val = $("#artseek").val();
+            $("#partview").load("/Catalog/Search?q=" + val, function (data) {
+                if (data != null) {
+                    $("#partview").html(data);
+                     clearfilters();
+                     clearside();
+                }
+            });
+        }
+        //buy modal scripts
+        $(document).ready(function () {
+
+            $(document).on("change",'input[name=mark]',function () {
+                $('.changeFrom1').addClass('hidden');
+                var id = $(this).attr('data-openSet');
+                $('#' + id + '').removeClass('hidden');
+            });
+
+            $(document).on("change",'#length',function () {
+                var length = $(this).val();
+                var last = length.length - 1;
+                var toChange = (length.charAt(last));
+                if (toChange >= 1) {
+                    $('#accLength').removeClass('hidden');
+                } else {
+                    $('#accLength').addClass('hidden');
+                }
+            });
+
+
+            $(document).on("change",'input[name=cover]',function () {
+                $('.changeFrom3').addClass('hidden');
+                var data_openSetCover = $(this).attr('data-openSetCover');
+                $('#' + data_openSetCover + '').removeClass('hidden');
+            });
+
+
+
+        });
+    </script>
+}

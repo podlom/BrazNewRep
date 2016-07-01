@@ -1,0 +1,83 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Профиль";
+    Braz.Models.User user = Session["User"] as Braz.Models.User;
+}
+<section class="profile_s">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="info_block">
+                    <h5>
+                        Информация о пользователе
+                        <div class="line"></div>
+                    </h5>
+                    <p><span>Имя: </span>@user.Name</p>
+                    <p><span>E-Mail: </span>@user.Email</p>
+                    <p><span>Телефон: </span>+38@(user.Phone)</p>
+                    <button data-toggle="modal" data-target="#infoChangeModal">Изменить</button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="cart_block">
+                    <h5>Корзина<div class="line"></div></h5>
+                    <ul>
+                        @foreach (Braz.Models.OrderedItem item in user.CurrOrder.Cart)
+                        {
+                            <li>@item.Item.Category.Name<span>(@item.AlloyMark, Длина - @(item.Length==null?"0":@item.Length.ToString()) мм, @item.Cover@(item.AdditionalProcessing?", Нужна дополнительная механическая обработка":""))</span></li>
+                        }
+                    </ul>
+                    @using (Html.BeginForm("SubmitOrder", "Pages", FormMethod.Post))
+                    {
+                        <textarea name="comment"></textarea>
+                        <button type="submit">Отправить на просчет</button>
+                    }
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="story_block">
+                    <h5>
+                        История заказов
+                        <div class="line"></div>
+                    </h5>
+                    <ul>
+                        @foreach(Braz.Models.Order order in (List<Braz.Models.Order>)ViewData["History"])
+                        {
+                            <li><a href="#">Заказ №@order.Id</a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<div class="modal fade" id="infoChangeModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Изменить данные</h4>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("ChangeUserData", "Pages", FormMethod.Post))
+                {
+                    <input type="text" name="name" placeholder="Новое имя">
+                    <input type="email" name="email" placeholder="Новый E-Mail">
+                    <input type="text" name="phone" placeholder="Новый телефон">
+                    <p>Забыли старый пароль?</p>
+                    <input type="text" name="password" placeholder="Новый пароль">
+                    <input type="submit" value="Изменить">
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="loader">
+    <div class="loader_inner">
+        <!-- <i class="fa fa-cog"></i> -->
+    </div>
+</div>

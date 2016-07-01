@@ -1,0 +1,60 @@
+﻿@{
+    ViewBag.Title = "Работа с новостями";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<section>
+    <div>
+        <a class="btn btn-danger" style="left:30px;position:fixed;" href="/admin">Назад</a>
+        <h1>Добавить новый пост</h1>
+        <div class="block addition">
+            @using (Html.BeginForm("AddPost", "Admin", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+            {
+                <input name="title" placeholder="Заголовок" required /><br />
+                <textarea name="text" placeholder="Текст" required></textarea><br />
+                <input id="file" type="file" name="index_image" required />
+                <input id="file2" type="file" name="list_image" required />
+                <input id="file3" type="file" name="post_image" required />
+                <label class="btn btn-info" for="file">Фото(Главная)</label><br />
+                <label class="btn btn-info" for="file2">Фото(Список новостей)</label><br />
+                <label class="btn btn-info" for="file3">Фото(Новость)</label><br />
+                <button class="btn btn-success" type="submit">Добавить</button>
+            }
+        </div>
+    </div>
+    <h1 style="text-align:center">Список всех новостей</h1>
+    @foreach (Braz.Models.Post post in (List<Braz.Models.Post>)ViewData["PostList"])
+    {
+        DateTime OldDate = post.Date;
+        <div class="block">
+            @using (Html.BeginForm("EditPost", "Admin", new { post = post.Id, olddate=OldDate.ToString() }, FormMethod.Post, new { @enctype = "multipart/form-data" }))
+            {
+                <h1>Новость</h1>
+                <p>ID Новости - @post.Id.ToString()</p><br />
+                <h3>Заголовок</h3><br />
+                <input required name="title" value="@post.Header" /><br />
+                <h3>Текст</h3><br />
+                <p><textarea required name="text">@post.Text.Replace("<br>", "\n")</textarea></p><br />
+                <p style="display:inline">Дата создания - </p><input class="date" name="day" type="number" min="1" max="31" required value="@post.Date.Day.ToString()"/>
+                                                              <input class="date" name="month" type="number" min="1" max="12" required value="@post.Date.Month.ToString()" />
+                                                              <input class="date" name="year" type="number" required value="@post.Date.Year.ToString()" /><br />   
+                <input id="file-@(post.Id)" type="file" name="index_image" />
+                <input id="file2-@(post.Id)" type="file" name="list_image" />
+                <input id="file3-@(post.Id)" type="file" name="post_image" />
+                <label class="btn btn-info mgb20" for="file-@(post.Id)">Заменить фото(Главная)</label><br />
+                <label class="btn btn-info mgb20" for="file2-@(post.Id)">Заменить фото(Список новостей)</label><br />
+                <label class="btn btn-info mgb20" for="file3-@(post.Id)">Заменить фото(Новость)</label><br />
+                <button class="btn btn-success" type="submit" style="margin-right: -19px;">Изменить</button>  
+                @Html.ActionLink("Удалить пост", "DeletePost", "Admin", new { post = post.Id }, new { @class="btn btn-danger" })
+            }
+        </div>
+    }
+</section>
+<style>
+    .mgb20{
+        margin-bottom:20px;
+    }
+    .date{
+        width:65px !important;
+        text-align:center;
+    }
+</style>

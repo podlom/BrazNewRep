@@ -1,0 +1,222 @@
+﻿@{
+    ViewBag.Title = "Вакансии";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<Braz.Models.Vacancy> data = (List<Braz.Models.Vacancy>)ViewData["Vacancies"];
+}
+    <section id="vacancies">
+        <div class="outer">
+            <div class="main-part office">
+                <div class="content">
+                    <h2>Работа в оффисе</h2>
+                    <ul>
+                        @foreach(Braz.Models.Vacancy vac in data.Where(x=>x.Type==0))
+                        {
+                            <li>
+                                <div class="link">
+                                    <a href=@("/Vacancy/Index/"+vac.Url)>@vac.Header</a>
+                                    <span>@vac.Header</span>
+                                    <div class="more">
+                                        <div class="text">@vac.Description</div>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <div class="overlay"></div>
+            </div>
+            <div class="main-part working">
+                <div class="content">
+                    <h2>Работа на производстве</h2>
+                    <ul>
+                        @foreach (Braz.Models.Vacancy vac in data.Where(x => x.Type == 1))
+                        {
+                            <li>
+                                <div class="link">
+                                    <a href=@("/Vacancy/Index/"+vac.Url)>@vac.Header</a>
+                                    <span>@vac.Header</span>
+                                    <div class="more">
+                                        <div class="text">@vac.Description</div>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <div class="overlay"></div>
+            </div>
+        </div>
+        <!-- 		<div class="info">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="link">
+                                    <span>Lorem ipsum.</span>
+                                    <div class="more">
+                                        <div class="text">подробнее</div>
+                                    </div>
+                                </div>
+                                <div class="link">
+                                    <span>Lorem ipsum.</span>
+                                    <div class="more">
+                                        <div class="text">подробнее</div>
+                                    </div>
+                                </div>
+                                <div class="link">
+                                    <span>Lorem ipsum.</span>
+                                    <div class="more">
+                                        <div class="text">подробнее</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+    </section>
+
+    <!-- <section class="services_screen">
+        <div class="serv_block" style="background-image: url('img/serv/1.jpg')">
+            <div class="overlay">
+                <h5>Литье цилиндрических столбов <div class="line"></div></h5>
+
+                <p>
+                    Процесс изготовления столба алюминиевого включает три этапа: <br>
+    • плавка в печи непрерывного действия;<br>
+    • литье в горизонтальной литейной машине;<br>
+    • гомогенизация — термическая обработка для получения однородной и крепкой структуры слитка.<br>
+    По сравнению со стальным, алюминиевый столб обладает множеством преимуществ:<br>
+    • небольшой вес;<br>
+    • более податлив механической обработке;<br>
+    • хороший внешний вид, прочность, жесткость, долговечность;<br>
+    • высокая устойчивость к возникновению коррозии;<br>
+    • приемлемая цена при покупке.<br>
+    Перечень сфер, где применяется столб алюминиевый, многочисленный. В частности, он служит основной заготовкой для экструзионного производства профилей.
+    Цилиндрические столбы литейного производства Броварского Алюминиевого Завода имеют свидетельство соответствия нормативным документам ДСТУ ISO 9001:2009 (ISO 9001:2008, IDT).
+                </p>
+            </div>
+        </div>
+        <div class="serv_block" style="background-image: url('img/serv/2.jpg')">
+            <div class="overlay">
+                <h5>Точная порезка <div class="line"></div></h5>
+
+                <p>
+                    Двухголовая пила производителя Wegoma с возможностью регулировки угла резки от 90° до 45° обеспечит точную порезку Вашего алюминиевого профиля.
+                </p>
+            </div>
+        </div>
+        <div class="serv_block" style="background-image: url('img/serv/3.jpg')">
+            <div class="overlay">
+                <h5>Механическая обработка поверхности <div class="line"></div></h5>
+                <p>
+                    Установленные в цехе механической обработки современные станки позволяют выполнять нашему заводу такие задачи по обработке алюминиевых профилей,  как: <br>
+    • фрезерная обработка; <br>
+    • токарная обработка; <br>
+    • сверление отверстий; <br>
+    • порезка в размер; <br>
+    • штамповка;<br>
+    • сверление.<br>
+    Цех механической обработки Броварского Алюминиевого Завода выполнит заказы по механической обработке как продукции  своего производства, так и по обработке изделий заказчика.
+                </p>
+            </div>
+        </div>
+        <div class="serv_block" style="background-image: url('img/serv/4.jpg')">
+            <div class="overlay">
+                <h5>Дробеструйная обработка поверхности <div class="line"></div></h5>
+                <p>
+                    Абразивная обработка поверхности алюминиевых профилей производится стальной нержавеющей дробью с целью улучшения его поверхности перед применением предохранительных слоев. <br>
+    Так же на нашем предприятии для получения гладкой, зеркально блестящей и более чистой поверхности алюминиевого профиля возможна его полировка.
+                </p>
+            </div>
+        </div>
+        <div class="serv_block" style="background-image: url('img/serv/5.jpg')">
+            <div class="overlay">
+                <h5>Анодно-окисное покрытие</h5>
+                <div class="line"></div>
+                <p>
+
+                </p>
+            </div>
+        </div>
+        <div class="serv_block" style="background-image: url('img/serv/6.jpg')">
+            <div class="overlay">
+                <h5>Полимерное покрытие <div class="line"></div></h5>
+
+                <p>
+                    Для улучшения эксплуатационных, защитных и декоративных характеристик Вашего изделия возможна его окраска порошковыми эмалями по цветовой гамме RAL, а также нанесение структуры дерева на поверхность любой сложности с точной передачей фактуры.
+                </p>
+            </div>
+        </div>
+    </section> -->
+
+    <footer>
+        <div class="soc_block">
+            <div class="item">
+                <a href="https://www.facebook.com/braz.industries/" target="_blank">
+                    <i class="fa fa-facebook"></i>
+                </a>
+            </div>
+            <div class="item">
+                <a href="">
+                    <i class="fa fa-twitter"></i>
+                </a>
+            </div>
+            <div class="item">
+                <a href="">
+                    <i class="fa fa-linkedin"></i>
+                </a>
+            </div>
+            <div class="item">
+                <a href="https://plus.google.com/108630417052860007244" target="_blank">
+                    <i class="fa fa-google-plus"></i>
+                </a>
+            </div>
+            <div class="item">
+                <a href="https://www.youtube.com/channel/UC1T9si7nLVStmCxWFce942Q" target="_blank">
+                    <i class="fa fa-youtube"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="copyright">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 col-md-offset-4">
+                        Сopyright©2016
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <div id="page-preloader"><span class="spinner"></span></div>
+
+
+    <!-- build:js js/vendor.min.js -->
+    <!-- bower:js -->
+    <script src="~/Scripts/bower_components/jquery/dist/jquery.js"></script>
+    <script src="~/Scripts/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="~/Scripts/bower_components/owl.carousel/dist/owl.carousel.js"></script>
+    <script src="~/Scripts/bower_components/aos/dist/aos.js"></script>
+    <script src="~/Scripts/bower_components/page-scroll-to-id/jquery.malihu.PageScroll2id.js"></script>
+    <script src="~/Scripts/bower_components/jquery-ui/jquery-ui.js"></script>
+    <script src="~/Scripts/bower_components/chartist/dist/chartist.min.js"></script>
+    <script src="~/Scripts/bower_components/chartist-plugin-pointlabels/dist/chartist-plugin-pointlabels.min.js"></script>
+    <script src="~/Scripts/bower_components/onepage-scroll/jquery.onepage-scroll.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <script>
+
+    AOS.init({
+        easing: 'ease-out-back',
+        duration: 800
+    });
+
+    </script>
+
+    <!-- build:js js/main.min.js -->
+    <script src="~/Scripts/main.js"></script>
+    <script src="~/Scripts/stat.js"></script>
+    <script src="~/Scripts/buy.js"></script>
+    <!-- endbuild -->

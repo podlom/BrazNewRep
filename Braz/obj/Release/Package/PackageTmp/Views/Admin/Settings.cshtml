@@ -1,0 +1,17 @@
+﻿@{
+    ViewBag.Title = "Настройки";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    List<Braz.GeneralSetting> list = (List<Braz.GeneralSetting>)ViewData["Settings"];
+}
+
+<div class="admin-form">
+    <h2>Настройки</h2>
+    @using (Html.BeginForm("SaveSettings", "Admin", FormMethod.Post, new { }))
+    {
+        foreach (Braz.GeneralSetting setting in list)
+        {
+            <p>@setting.Display: <input value="@setting.Value" name="@setting.Identifier" required /></p>
+        }
+        <input type="submit" value="Сохранить" class="btn btn-success" />
+    }
+</div>

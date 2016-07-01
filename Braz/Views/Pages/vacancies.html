@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Заголовок</title>
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="img/favicon/favicon.ico" type="image/x-icon">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- build:css css/vendor.min.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/owl.carousel/dist/assets/owl.carousel.css" />
+    <link rel="stylesheet" href="bower_components/aos/dist/aos.css" />
+    <link rel="stylesheet" href="bower_components/chartist/dist/chartist.min.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+    <!-- build:css css/main.min.css -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/media.css">
+    <!-- endbuild -->
+
+
+</head>
+
+<body>
+
+<!-- <a class="up_btn" href="#header">
+    <i class="fa fa-chevron-up"></i>
+</a>
+
+<a href="#" class="cat_btn">
+    <div>
+        <i class="fa fa-cog"></i>
+    </div>
+</a> -->
+<nav>
+    <a href="index.html"><img src="img/logo.png" class="mobLogo" alt=""></a>
+    <div class="navbar-header">
+        <button class="navbar-toggle collapsed mobMenuInner" data-toggle="collapse" data-target="#menu"><i class="fa fa-bars" aria-hidden="true"></i></button>
+    </div>
+    <div class="collapse navbar-collapse" id="menu">
+        <ul>
+            <li><a href="#">О нас</a>
+                <ul class="dd_menu">
+                    <li><a href="story.html">История</a></li>
+                    <li><a href="group.html">Группа компаний</a></li>
+                    <li><a href="statistics.html">Статистика</a></li>
+                </ul>
+            </li>
+            <li><a href="#">каталог</a>
+                <ul class="dd_menu">
+                    <li><a href="#">Полоса</a></li>
+                    <li><a href="#">Трубы АЛЮМИНИЕВЫЕ</a></li>
+                    <li><a href="#">Уголок</a></li>
+                    <li><a href="#">Пруток</a></li>
+                    <li><a href="#">Прочие профили</a></li>
+                </ul>
+            </li>
+            <li><a href="#">Наше производство</a>
+                <ul class="dd_menu">
+                    <li><a href="prod.html">Литейное производство</a></li>
+                    <li><a href="prod2.html">Экструзионное производство</a></li>
+                    <li><a href="prod3.html">Цех гальванического покрытия</a></li>
+                    <li><a href="prod4.html">Цех полимерного покрытия</a></li>
+                    <li><a href="prod5.html">Лабаратория</a></li>
+                    <li><a href="prod6.html">Участок упаковки</a></li>
+                    <li><a href="services.html">Услуги</a></li>
+                </ul>
+            </li>
+            <li class="liLogo"><a href="index.html" aos="flip-left" aos-duration="800"><img src="img/logo.png" alt="logo"></a></li>
+            <li><a href="#">Пресс-центр</a>
+                <ul class="dd_menu">
+                    <li><a href="newsList.html">Новости</a></li>
+                    <li><a href="#">Блог компании</a></li>
+                    <li><a href="questions.html">Часто задаваемые вопросы</a></li>
+                    <li><a href="#">Отзывы</a></li>
+                </ul>
+            </li>
+            <li><a href="#">Контакты</a></li>
+            <!-- <li><a href="#"><i class="fa fa-user"></i></a></li>
+            <li><a href="#"><i class="fa fa-shopping-cart"><div class="label">1</div></i></a></li> -->
+
+            <li><a href="#" class="main_color" data-toggle="modal" data-target="#regModal">Регистрация</a></li>
+            <li><a href="#" class="main_color" data-toggle="modal" data-target="#loginModal">Войти</a></li>
+        </ul>
+    </div>
+</nav>
+	<section id="vacancies">
+		<div class="outer">
+			<div class="main-part office">
+				<div class="content">
+					<h2>Работа в оффисе</h2>
+					<ul>
+						<li>
+							<div class="link">
+								<span>Менеджер</span>
+								<div class="more">
+									<div class="text">подробнее</div>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="link">
+								<span>Программист</span>
+								<div class="more">
+									<div class="text">подробнее</div>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="link">
+								<span>Администратор</span>
+								<div class="more">
+									<div class="text">подробнее</div>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="overlay"></div>
+			</div>
+			<div class="main-part working">
+				<div class="content">
+				<h2>Работа на производстве</h2>
+					<ul>
+						<li>
+							<div class="link">
+								<span>Вакансия</span>
+								<div class="more">
+									<div class="text">подробнее</div>
+								</div>
+							</div>
+						</li>
+						<li>
+                            <div class="link">
+                                <span>Вакансия</span>
+                                <div class="more">
+                                    <div class="text">подробнее</div>
+                                </div>
+                            </div>
+                        </li>
+						<li>
+                            <div class="link">
+                                <span>Вакансия</span>
+                                <div class="more">
+                                    <div class="text">подробнее</div>
+                                </div>
+                            </div>
+                        </li>
+						<li>
+                            <div class="link">
+                                <span>Вакансия</span>
+                                <div class="more">
+                                    <div class="text">подробнее</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="link">
+                                <span>Вакансия</span>
+                                <div class="more">
+                                    <div class="text">подробнее</div>
+                                </div>
+                            </div>
+                        </li>
+					</ul>
+				</div>
+				<div class="overlay"></div>
+			</div>
+		</div>
+<!-- 		<div class="info">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="link">
+							<span>Lorem ipsum.</span>
+							<div class="more">
+								<div class="text">подробнее</div>
+							</div>
+						</div>
+						<div class="link">
+							<span>Lorem ipsum.</span>
+							<div class="more">
+								<div class="text">подробнее</div>
+							</div>
+						</div>
+						<div class="link">
+							<span>Lorem ipsum.</span>
+							<div class="more">
+								<div class="text">подробнее</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div> -->
+	</section>
+
+<!-- <section class="services_screen">
+    <div class="serv_block" style="background-image: url('img/serv/1.jpg')">
+        <div class="overlay">
+            <h5>Литье цилиндрических столбов <div class="line"></div></h5>
+            
+            <p>
+                Процесс изготовления столба алюминиевого включает три этапа: <br>
+• плавка в печи непрерывного действия;<br>
+• литье в горизонтальной литейной машине;<br>
+• гомогенизация — термическая обработка для получения однородной и крепкой структуры слитка.<br>
+По сравнению со стальным, алюминиевый столб обладает множеством преимуществ:<br>
+• небольшой вес;<br>
+• более податлив механической обработке;<br>
+• хороший внешний вид, прочность, жесткость, долговечность;<br>
+• высокая устойчивость к возникновению коррозии;<br>
+• приемлемая цена при покупке.<br>
+Перечень сфер, где применяется столб алюминиевый, многочисленный. В частности, он служит основной заготовкой для экструзионного производства профилей.
+Цилиндрические столбы литейного производства Броварского Алюминиевого Завода имеют свидетельство соответствия нормативным документам ДСТУ ISO 9001:2009 (ISO 9001:2008, IDT).
+            </p>
+        </div>
+    </div>
+    <div class="serv_block" style="background-image: url('img/serv/2.jpg')">
+        <div class="overlay">
+            <h5>Точная порезка <div class="line"></div></h5>
+            
+            <p>
+                Двухголовая пила производителя Wegoma с возможностью регулировки угла резки от 90° до 45° обеспечит точную порезку Вашего алюминиевого профиля.
+            </p>
+        </div>
+    </div>
+    <div class="serv_block" style="background-image: url('img/serv/3.jpg')">
+        <div class="overlay">
+            <h5>Механическая обработка поверхности <div class="line"></div></h5>
+            <p>
+                Установленные в цехе механической обработки современные станки позволяют выполнять нашему заводу такие задачи по обработке алюминиевых профилей,  как: <br>
+• фрезерная обработка; <br>
+• токарная обработка; <br>
+• сверление отверстий; <br>
+• порезка в размер; <br>
+• штамповка;<br>
+• сверление.<br>
+Цех механической обработки Броварского Алюминиевого Завода выполнит заказы по механической обработке как продукции  своего производства, так и по обработке изделий заказчика.
+            </p>
+        </div>
+    </div>
+    <div class="serv_block" style="background-image: url('img/serv/4.jpg')">
+        <div class="overlay">
+            <h5>Дробеструйная обработка поверхности <div class="line"></div></h5>
+            <p>
+                Абразивная обработка поверхности алюминиевых профилей производится стальной нержавеющей дробью с целью улучшения его поверхности перед применением предохранительных слоев. <br>
+Так же на нашем предприятии для получения гладкой, зеркально блестящей и более чистой поверхности алюминиевого профиля возможна его полировка.
+            </p>
+        </div>
+    </div>
+    <div class="serv_block" style="background-image: url('img/serv/5.jpg')">
+        <div class="overlay">
+            <h5>Анодно-окисное покрытие</h5>
+            <div class="line"></div>
+            <p>
+
+            </p>
+        </div>
+    </div>
+    <div class="serv_block" style="background-image: url('img/serv/6.jpg')">
+        <div class="overlay">
+            <h5>Полимерное покрытие <div class="line"></div></h5>
+            
+            <p>
+                Для улучшения эксплуатационных, защитных и декоративных характеристик Вашего изделия возможна его окраска порошковыми эмалями по цветовой гамме RAL, а также нанесение структуры дерева на поверхность любой сложности с точной передачей фактуры.
+            </p>
+        </div>
+    </div>
+</section> -->
+
+<footer>
+    <div class="soc_block">
+        <div class="item">
+            <a href="https://www.facebook.com/braz.industries/" target="_blank">
+                <i class="fa fa-facebook"></i>
+            </a>
+        </div>
+        <div class="item">
+            <a href="">
+                <i class="fa fa-twitter"></i>
+            </a>
+        </div>
+        <div class="item">
+            <a href="">
+                <i class="fa fa-linkedin"></i>
+            </a>
+        </div>
+        <div class="item">
+            <a href="https://plus.google.com/108630417052860007244" target="_blank">
+                <i class="fa fa-google-plus"></i>
+            </a>
+        </div>
+        <div class="item">
+            <a href="https://www.youtube.com/channel/UC1T9si7nLVStmCxWFce942Q" target="_blank">
+                <i class="fa fa-youtube"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="copyright">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                    Сopyright&copy;2016
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+<div id="page-preloader"><span class="spinner"></span></div>
+
+
+
+
+<div class="modal fade" id="regModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Регистрация</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+            <input type="text" placeholder="Как к вам обращаться?" required><br>
+            <input type="email" placeholder="Ваш E-Mail" required><br>
+            <input type="text" placeholder="На какой номер перезвонить?" required><br>
+            <input type="password" placeholder="Придумайте пароль" required><br>
+            <input type="password" placeholder="Повторите пароль" required><br>
+
+            <input type="submit" class="submit" value="Зарегистрироватсья">
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Войти</h4>
+      </div>
+      <div class="modal-body">
+
+            <input type="email" placeholder="E-Mail" required><br>
+            <input type="password" placeholder="Пароль" required><br>
+
+            <input type="submit" class="submit" value="Войти">
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- build:js js/vendor.min.js -->
+<!-- bower:js -->
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script src="bower_components/owl.carousel/dist/owl.carousel.js"></script>
+<script src="bower_components/aos/dist/aos.js"></script>
+<script src="bower_components/page-scroll-to-id/jquery.malihu.PageScroll2id.js"></script>
+<script src="bower_components/jquery-ui/jquery-ui.js"></script>
+<script src="bower_components/chartist/dist/chartist.min.js"></script>
+<script src="bower_components/chartist-plugin-pointlabels/dist/chartist-plugin-pointlabels.min.js"></script>
+<script src="bower_components/onepage-scroll/jquery.onepage-scroll.js"></script>
+<!-- endbower -->
+<!-- endbuild -->
+
+<script>
+
+    AOS.init({
+        easing: 'ease-out-back',
+        duration: 800
+    });
+
+</script>
+
+<!-- build:js js/main.min.js -->
+<script src="js/main.js"></script>
+<script src="js/stat.js"></script>
+<script src="js/buy.js"></script>
+<!-- endbuild -->
+
+</body>
+
+</html>

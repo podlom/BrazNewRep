@@ -1,0 +1,8 @@
+﻿@if (!((List<string>)HttpContext.Current.Application["Languages"]).Contains(Session["lang"]) || (string)Session["lang"]=="ru")
+{
+    <p>Неверный логин и/или пароль.</p>
+}
+else if ((string)Session["lang"] == "en")
+{
+    <p>Invalid login/password</p>
+}

@@ -1,0 +1,62 @@
+﻿@{
+    List<Braz.Models.Filter> list = (List<Braz.Models.Filter>)ViewData["FilterSet"];
+    List<Braz.Models.Parameter> param = (List<Braz.Models.Parameter>)ViewData["ParameterSet"];
+}
+<div id="filter" style="text-align:center">
+    @foreach (Braz.Models.Filter filter in list)
+    {
+        <span data-max="@filter.Max.ToString().Replace(',','.')" data-min="0" id="@(filter.Id.ToString())_show" class="slider_descr"></span>
+        <div class="slider-@(filter.Id.ToString())"></div>
+    }
+<br>
+    <!--<button class="btn btn-info" id="applyfilter" style="width:54%;">Применить фильтры</button><br>--><br>
+    @foreach(Braz.Models.Parameter parameter in param)
+    {
+        if(parameter.Key!="Article")
+{
+        <p style="text-align:left">@Html.Raw(parameter.Description)</p>
+}
+    }
+    <br />
+    <script>
+        @foreach(Braz.Models.Filter filter in list)
+        {
+            <text>
+                var quant = '@(filter.Parameter.Value)';
+                quant = quant.substring(quant.length-2);
+                $('.slider-@(filter.Id.ToString())').slider({
+                animate: "fast",
+                range: !0,
+                max: @filter.Max.ToString().Replace(',', '.'),
+                min: 0,
+                values: [0, @filter.Max.ToString().Replace(',', '.')],
+                step:@filter.Step.ToString().Replace(',','.'),
+                slide: function (e,t) {
+                    $("#@(filter.Id.ToString())_show").text("@(filter.Parameter.Value): " + t.values[0] + " - " + t.values[1] + " "+quant)
+                    $("#@(filter.Id.ToString())_show").attr("data-min",t.values[0]);
+                    $("#@(filter.Id.ToString())_show").attr("data-max",t.values[1]);
+var get = "/Catalog/ApplyFilters?cat="+"@(((int)ViewData["SubCat"]).ToString())"+"&";
+            @foreach(Braz.Models.Filter filter2 in list)
+            {
+                <text>
+                    get=get+@(filter2.Id.ToString())+"-max="+$("#@(filter2.Id.ToString())_show").attr("data-max")+"&"+@(filter2.Id.ToString())+"-min="+$("#@(filter2.Id.ToString())_show").attr("data-min")+"&";
+                </text>
+            }
+            get=get.substring(0,get.length-1);
+            $("#partview").load(get,function (data) {
+                if (data != null) {
+                    $("#partview").html(data);
+                }});
+                }
+                });
+                $("#@(filter.Id.ToString())_show").text("@(filter.Parameter.Value): " + $(".slider-@(filter.Id.ToString())").slider("values", 0) + " - " + $(".slider-@(filter.Id.ToString())").slider("values", 1));
+            </text>
+        }
+        $(document).on("click","#applyfilter",function() {
+            
+        });
+    </script>
+</div>
+
+
+

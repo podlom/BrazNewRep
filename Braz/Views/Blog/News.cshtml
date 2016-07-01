@@ -1,0 +1,95 @@
+﻿@{
+    Braz.Models.Post post = (Braz.Models.Post)ViewData["Post"];
+    ViewBag.Title = post.Header;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section PageStyle
+{
+    <link rel="stylesheet" href="~/Content/css/social-likes_flat.css">
+}
+<style>
+    .fb_edge_widget_with_comment span.fb_edge_comment_widget iframe.fb_ltr, .pluginButtonSpacer, .pls, ._51mw, .pluginButton {
+        display: none !important;
+    }
+
+    .socials {
+        float: left;
+        display: inline-block;
+    }
+</style>
+<div class="social">
+    <!--VK API-->
+    <!--<script type="text/javascript" src="//vk.com/js/api/openapi.js?121"></script>
+    <script type="text/javascript">
+        VK.init({apiId: 5356582, onlyWidgets: true});
+    </script>
+    <!--FB API-->
+    <div id="fb-root"></div>
+    <script>
+        (function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0];
+          if (d.getElementById(id)) return;
+          js = d.createElement(s); js.id = id;
+          js.src = "//connect.facebook.net/uk_UA/sdk.js#xfbml=1&version=v2.5";
+          fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+    <!--G+ API-->
+    <script src="https://apis.google.com/js/platform.js" async defer>
+        {lang: 'ru'}
+    </script>-->
+</div>
+<section class="newsMore">
+    <div class="col">
+        <div aos="fade-right" class="news_img" style="background-image: url(/Content/img/news/newsmore/@(post.Id.ToString()).post.jpg)">
+
+        </div>
+        <div aos="fade-up" aos-delay="300" class="news_title">
+            <h4>
+                @post.Header
+            </h4>
+            <div class="line"></div>
+            @{ 
+                System.Globalization.CultureInfo cult = new System.Globalization.CultureInfo("ru-RU");
+            }
+            <p>@post.Date.ToString("d MMM yyyy",cult)</p>
+            <div class="news_soc">
+                <div class="container">
+                    <!--<div class="socials" style="width:100px;margin:20px; left:0px;">
+                        <div id="vk_like"></div>
+                        <script type="text/javascript" style="">
+                            VK.Widgets.Like("vk_like", {type: "button"});
+                        </script>
+                    </div>
+                    @*<div class="socials" style="width:100px; left:0px;">
+                            <div class="fb-like" data-href="http://test.braz.com.ua" data-layout="standard" data-action="like" data-show-faces="true" data-share="true"></div>
+                        </div>*@
+                    <div class="socials" style="width:100px; left:0px;">
+                        <div class="g-plusone"></div>
+                    </div>-->
+                    <div class="social-likes" style="float:left">
+	               <div class="facebook" title="Поделиться ссылкой на Фейсбуке">Facebook</div>
+	               <div class="vkontakte" title="Поделиться ссылкой во Вконтакте">Вконтакте</div>
+	              <div class="plusone" title="Поделиться ссылкой в Гугл+">Google+</div>
+                 </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <article style="text-align:left;" aos="fade-down" aos-delay="400">
+            @Html.Raw(post.Text)
+        </article>
+        <div class="news_nav" aos="fade-left" aos-delay="500">
+            @if (post.Previous != null)
+            {<a href="/blog/news?post=@(post.Previous)"><i class="fa fa-long-arrow-left"></i></a>}
+            @if (post.Next != null)
+            {<a href="/blog/news?post=@(post.Next)"><i class="fa fa-long-arrow-right"></i></a>}
+        </div>
+    </div>
+</section>
+@section page_script
+{
+    <script src="~/Scripts/social-likes.min.js"></script>
+}
+

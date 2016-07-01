@@ -1,0 +1,252 @@
+﻿@{ 
+    var global = (Dictionary<string, Dictionary<int, Dictionary<string, string>>>)HttpContext.Current.Application["Localization"];
+    string lang = (string)HttpContext.Current.Session["lang"];
+    var inlang = global[lang];
+}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <title>@ViewBag.Title</title>
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="~/Content/img/favicon/favicon.ico" type="image/x-icon">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    @RenderSection("PageStyle", false)
+    <link rel="stylesheet" href="~/Content/css/vendor.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/Content/css/main.min.css">
+
+</head>
+<body>
+    @RenderSection("mainpage_svistoperdelka", false)
+    <nav>
+        <a href="/"><img src="~/Content/img/logo.png" class="mobLogo" alt=""></a>
+        <div class="navbar-header">
+            <button class="navbar-toggle collapsed mobMenuInner" data-toggle="collapse" data-target="#menu"><i class="fa fa-bars" aria-hidden="true"></i></button>
+        </div>
+        <div class="collapse navbar-collapse" id="menu">
+            <ul>
+ <li>
+                    <a href="/">@inlang[0]["NavbarTitle"]</a>
+                </li>
+
+                <li>
+                    <a href="#">@inlang[0]["About"]</a>
+                    <ul class="dd_menu">
+
+                        <li class="hideMob">@Html.ActionLink(inlang[1]["Title"], "Story", "Pages")</li>
+                        <li>@Html.ActionLink(inlang[2]["Title"], "Group", "Pages", new { Section = "BrazConstruction" }, new { })</li>
+                        <li  class="hideMob">@Html.ActionLink(inlang[3]["Title"], "Statistics", "Pages")</li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">@inlang[4]["Title"]</a>
+                    <ul class="dd_menu">
+                        <li>@Html.ActionLink(inlang[4]["Standart"], "Index", "Catalog", new { cat = 0 }, new { })</li>
+                        <li>@Html.ActionLink(inlang[4]["Notstandart"], "Index", "Catalog", new { cat = 33 }, new { })</li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">@inlang[0]["NavbarProd"]</a>
+                    <ul class="dd_menu">
+                        @{int i = 0; }
+                        @foreach(KeyValuePair<string,string> pair in (Dictionary<string, string>)HttpContext.Current.Application["ProductionCategories"])
+                        {
+                            <li><a href="@("/Pages/Production/"+pair.Key)">@inlang[5]["Title-"+(i++).ToString()]</a></li>
+                        }
+                    </ul>
+                </li>
+<li>
+                    <a href="#">@inlang[0]["NavbarPress"]</a>
+                    <ul class="dd_menu">
+                        <li>@Html.ActionLink(inlang[6]["Title"], "Index", "Blog")</li>
+                        <li>@Html.ActionLink(inlang[8]["Title"], "chasto_zadavaemye_voprosy", "Pages")</li>
+                    </ul>
+                </li>
+                <li>@Html.ActionLink(inlang[9]["Title"], "Contacts", "Pages")</li>
+                @if (((Braz.Models.User)Session["User"]) != (Braz.Models.User)HttpContext.Current.Application["Admin"])
+                {
+                    if ((bool)Session["Logged"])
+                    {
+                        <li><a href="~/Pages/Profile"><i class="fa fa-user"></i></a></li>
+                        <li><a href="#"><i class="fa fa-shopping-cart"><div class="label">@if ((Braz.Models.User)Session["User"] != null)
+                        { <text>@(((Braz.Models.User)Session["User"]).CurrOrder.Cart.Count)</text> }</div></i></a></li>
+
+                        <li><a href="/Pages/Exit" class="main_color">@inlang[0]["NavbarExit"]</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="#" class="main_color" data-toggle="modal" data-target="#regModal">@inlang[0]["NavbarReg"]</a></li>
+                    }
+                }
+            </ul>
+        </div>
+    </nav>
+    @RenderSection("MainSlider", false)
+    @RenderSection("HomeHeaderEnd", false)
+    
+
+    <div class="breadcrumbs">
+        @{
+            string BcBase = Context.Request.Path.ToString();
+         }
+        @Html.Raw(GetBreadcrumbs(BcBase))
+    </div>
+
+
+    @RenderBody()
+
+
+    <div class="modal fade" id="regModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Регистрация</h4>
+                </div>
+                <div class="modal-body">
+
+                    @using (Html.BeginForm("AddUser", "Pages", FormMethod.Post))
+                    {
+                        <input type="text" name="name" placeholder="Как к вам обращаться?" required><br>
+                        <input type="email" name="email" placeholder="Ваш E-Mail" required><br>
+                        <input type="text" name="phone" placeholder="На какой номер перезвонить?" required><br>
+                        <input type="password" placeholder="Придумайте пароль" required><br>
+                        <input type="password" name="password" placeholder="Повторите пароль" required><br>
+
+                        <input type="submit" class="submit" value="Регистрация">
+                        <p>Уже зарегистрированы?</p>
+                        <a href="#" onclick=" $('#regModal').modal('hide');" class="btn-block submit" data-toggle="modal" data-target="#loginModal" style="text-align:center">Войти</a>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Войти</h4>
+                </div>
+                <div class="modal-body">
+                    @using (Ajax.BeginForm("CheckUser", "Pages", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "response", HttpMethod = "POST" }))
+                    {
+                        <input type="email" name="email" placeholder="E-Mail" required><br>
+                        <input type="password" name="password" placeholder="Пароль" required><br>
+                        <p id="response"></p><br />
+                        <input type="submit" class="submit" value="Войти">
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/Scripts/vendor.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    @RenderSection("page_script", false)
+    <script>
+AOS.init({
+    easing: 'ease-out-back',
+    duration: 800
+});
+
+    </script>
+
+    <script src="~/Scripts/main.min.js"></script>
+<!— BEGIN JIVOSITE CODE {literal} —> 
+<script type='text/javascript'> 
+(function(){ var widget_id = 'Qt94VI2vbJ';var d=document;var w=window;function l(){ 
+var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = '//code.jivosite.com/script/widget/'+widget_id; var ss = document.getElementsByTagName('script')[0]; ss.parentNode.insertBefore(s, ss);}if(d.readyState=='complete'){l();}else{if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();</script> 
+<!— {/literal} END JIVOSITE CODE —>
+</body>
+
+</html>
+
+@functions {
+    string GetBreadcrumbs(string BcBase)
+    {
+        if(BcBase.ToLower().StartsWith("/admin"))
+        {
+            return "";
+        }
+        string result = "";
+
+        if (BcBase == "/")
+            return "<a href='/'>Главная</a>";
+        else
+            result += "<a href='/'>Главная</a> -> ";
+        BcBase = BcBase.Remove(0, 1);
+        if (BcBase.StartsWith("Catalog"))
+        {
+            result += "<a href='/Catalog'>Каталог</a> -> ";
+            return result;
+        }
+        else if(BcBase.ToLower().StartsWith("blog"))
+        {
+            string temp = Request.QueryString["post"];
+            if (temp != null && !temp.IsEmpty())
+            {
+                result += "<a href='/Blog'>Блог</a> -> " + Braz.Models.Post.GetPost(Int32.Parse(temp)).Header;
+            }
+            else
+            {
+                result += "Блог";
+            }
+
+            return result;
+        }
+        else if (BcBase.ToLower().StartsWith("pages/production"))
+        {
+            string middle = Request.Path.Substring(Request.Path.LastIndexOf('/')+1);
+            result += "<a href='/production'>Продукция</a> -> " + ((Dictionary<string, string>)HttpContext.Current.Application["ProductionCategories"])[middle];
+
+            return result;
+        }
+        else if (BcBase.ToLower().StartsWith("pages/group"))
+        {
+            result += "<a href='/Group?Section=BrazConstruction'>Група компаний</a> -> ";
+            string req = Request.QueryString["Section"];
+            if (req == "BrazConstruction")
+            {
+                result += "Braz Construction";
+            }
+            else if( req== "BrazLine")
+            {
+                result += "Braz Line";
+            }
+            return result;
+        }
+        else
+        {
+            BcBase = BcBase.Remove(0, 6);
+            switch (BcBase)
+            {
+                case "Profile":
+                    result += "<a href='/profile'>Профиль</a>"; break;
+                case "chasto_zadavaemye_voprosy":
+                    result += "<a href='/chasto_zadavaemye_voprosy'>Часто задаваемые вопросы</a>"; break;
+                case "Services":
+                    result += "<a href='/Services'>Услуги</a>"; break;
+                case "Statistics":
+                    result += "<a href='/Statistics'>Статистика</a>"; break;
+                case "Story":
+                    result += "<a href='/Story'>История</a>"; break;
+                case "Contacts":
+                    result += "<a href='/Contacts'>Контакты</a>"; break;
+            }
+            return result;
+        }
+    }
+}
+<style>
+ .breadcrumbs{
+ display:none;
+}
+</style>

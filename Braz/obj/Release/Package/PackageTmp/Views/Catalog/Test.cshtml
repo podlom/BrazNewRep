@@ -1,0 +1,167 @@
+﻿@using Braz.Models;
+@{
+    ViewBag.Title = "Test";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<SubCategory> SubList = (List<SubCategory>)ViewData["CatList"];
+    List<int> SoloCategoryList = SubList.Where(x => x.Id == x.Parent.Id).ToList().Select(x => x.Id).ToList();
+}
+
+<ul class="cat_menu">
+    @foreach (Category cat in SubList.Select(x => x.Parent).Distinct(new CategoryEqualityComparer()).ToList())
+    {
+        <li>
+            @if (SoloCategoryList.Contains(cat.Id))
+            {
+                if ((User)Session["User"] == (User)HttpContext.Current.Application["Admin"]&&cat.Id<5)
+                {
+                    string addmod = "AddModal" + cat.Id.ToString();
+                    <span data-cat="@(cat.Id.ToString())" data-toggle="modal" data-target="#@addmod">Добавить</span>
+                }
+                @Ajax.ActionLink(cat.Name, (cat.Id < 5) ? "TableView" : "ListView", new { catid = cat.Id.ToString() }, new AjaxOptions { HttpMethod = "GET", InsertionMode = InsertionMode.Replace, UpdateTargetId = "partview", OnSuccess = "clearside" })
+
+            }
+            else
+            {
+                string table = (cat.Id < 5) ? "TableView" : "ListView";
+                <a href="#">@(cat.Name) <div class="line"></div></a>
+                <ul>
+                    @foreach (SubCategory subcat in SubList.Where(x => x.Parent.Id == cat.Id))
+                    {
+                        <li>
+                            @{if ((User)Session["User"] == (User)HttpContext.Current.Application["Admin"]&&cat.Id<5)
+                                {
+                                    string addmod = "AddModal" + subcat.Id.ToString();
+                                    <span data-cat="@(subcat.Id.ToString())" data-toggle="modal" data-target="#@addmod">Добавить</span>
+                                }
+                            }   
+                            @Ajax.ActionLink(subcat.Name, table, new { catid = subcat.Id }, new AjaxOptions { HttpMethod = "GET", InsertionMode = InsertionMode.Replace, UpdateTargetId = "partview", OnSuccess = "cascade(" + subcat.Id + ")" })
+                        </li>
+                    }
+                </ul>
+            }
+        </li>
+    }
+</ul>
+
+<aside>
+    <div id="cat_list">
+
+    </div>
+    <div>
+        <h6>Поиск <div class="line"></div></h6>
+        <input id="artseek" type="text" class="form-control" placeholder="Поиск по артикулу">
+        <button class="btn btn-info" onclick="searcharticle()">Поиск по артикулу</button><br />
+        <br />
+        <!--<span id="length_show" class="slider_descr"></span>
+        <div class="slider_length"></div><br>
+
+        <span id="width_show" class="slider_descr"></span>
+        <div class="slider_width"></div><br>
+
+        <span id="height_show" class="slider_descr"></span>
+        <div class="slider_height"></div><br>
+
+        <span id="weight_show" class="slider_descr"></span>
+        <div class="slider_weight"></div><br>
+
+        <span id="perimeter_show" class="slider_descr"></span>
+        <div class="slider_perimeter"></div><br>
+
+        <button class="btn btn-info" onclick="philter()">Поиск по фильтам</button><br />-->
+    </div>
+</aside>
+
+
+<div id="partview">
+    <div id="initcat"></div>
+</div>
+
+
+<div class="loader">
+    <div class="loader_inner">
+        <!-- <i class="fa fa-cog"></i> -->
+    </div>
+</div>
+
+<!--PRODUCT IO MODALS-->
+
+<div id="groupmodal"></div>
+<div id="inlinemodal"></div>
+<div id="editmodal"></div>
+
+
+
+
+
+
+
+
+
+@section page_script
+{
+    <script>
+        @if (ViewData["WithCat"]!=null && (bool)ViewData["WithCat"])
+        {
+            string table = ((SubCategory)ViewData["InitCat"]).Parent.Id < 5 ? "TableView" : "ListView";
+            string get = "/Catalog/" + table + "?catid=" + ((SubCategory)ViewData["InitCat"]).Id.ToString();
+            <text>
+                $(document).ready(function () {
+                    $("#initcat").load('@get',function(data) {
+                        $("#initcat").replaceWith(data);
+                        cascade(@((int)ViewData["InitCat"]));
+                    });
+                });
+            </text>
+        }
+        $('span').click(function () {
+            var item = this;
+            var cat = item.getAttribute("data-cat");
+            if (cat != null) {
+                    $("#groupmodal").load('/Catalog/GetGroupModal?catid=' + cat, function (data) {
+                        $("#groupmodal").replaceWith(data);
+                        $("#AddModal").modal("show");
+                    });
+            }
+        });
+        $('button').click(function () {
+            var item = this;
+            var article = item.getAttribute("data-article");
+            if (article != null) {
+                $("#editmodal").load('/Catalog/GetEditProduct?article=' + article, function (data) {
+                    $("#editmodal").replaceWith(data);
+                    $("#EditProduct").modal("show");
+                });
+            }
+        });
+        function cascade(tmp) {
+            $("#cat_list").load('/Catalog/UpdateAside?catid='+tmp,(function (data) {
+                    $('#cat_list').replaceWith(data);
+                }
+            ));
+            modalinline(tmp);
+        }
+        function modalinline(cat) {
+            $("#inlinemodal").load("/Catalog/GetInlineModal?catid=" + cat, function (data) {
+                $('#inlinemodal').replaceWith(data);
+            });
+        }
+        function clearside() {
+            $("#cat_list").empty();
+        }
+        function clearmodal() {
+            $("#addModalLine form").trigger('reset');
+        }
+        function hidemodal() {
+            $("#editmodal").modal("hide");
+        }
+        function searcharticle() {
+            var val = $("#artseek").val();
+            $("#partview").load("/Catalog/Search?q=" + val, function (data) {
+                if (data != null) {
+                    $("#partview").html(data);
+                    clearside();
+                }
+            });
+        }
+    </script>
+}

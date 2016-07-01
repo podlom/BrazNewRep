@@ -1,0 +1,57 @@
+﻿@using Braz.Models;
+@{ 
+    List<Item> ItemList = (List<Item>)ViewData["Items"];
+    SubCategory category = (SubCategory)ViewData["SubCategory"];
+}
+<div class="st_view">
+    @foreach(Item item in ItemList)
+    {
+        <div class="item">
+            <div class="img_block" style=" background-image: url('/Content/img/catalog/cat-@(category.Id.ToString())/@(item.Id.ToString()).2.jpg');" onMouseOver="this.style.backgroundImage = 'url(\'/Content/img/catalog/cat-@(category.Id.ToString())/@(item.Id.ToString()).1.jpg\')' " onMouseOut="this.style.backgroundImage = 'url(\'/Content/img/catalog/cat-@(category.Id.ToString())/@(item.Id.ToString()).2.jpg\')' ">
+                <div class="title">
+                    @ViewData["CatName"]
+                </div>
+                
+
+            </div>
+<div class="table-responsive">
+            <table class="table table-hover table-bordered nonst_table">
+                <thead>
+                    <tr>
+                        @foreach(Parameter param in category.Params)
+                        { 
+                            <th class="text-center">@param.Value</th>
+                        }
+                        @if (Session["User"] != HttpContext.Current.Application["Admin"])
+                        {
+                            <th class="text-center">Заказать</th>
+                        }
+                        else
+                        {
+                            <th class="text-center">Администрирование</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        @foreach(DataSet set in item.Data)
+                        {
+                            <th class="text-center">@set.Quantity</th>
+                        }
+                        @if (Session["User"] != HttpContext.Current.Application["Admin"])
+                        {
+                            <th class="text-center"> <button id="buybutton" data-action="buy" data-id="@(item.Id.ToString())" data-toggle="modal" data-target="#buyModal" style="width:90%;"><i class="fa fa-cart-plus"></i></button></th>
+                        }
+                        else
+                        {
+                            <th class="text-center"><button id="editbutton" data-action="edit" data-toggle="modal" data-id="@(item.Id.ToString())" data-target="#editModal"><i class="fa fa-wrench"></i></button>
+                            <button id="deletebutton" data-action="delete" data-toggle="modal" data-id="@(item.Id.ToString())" data-target="#deleteModal"><i class="fa fa-minus-square"></i></button></th>
+                        }
+                    </tr>
+                </tbody>
+            </table>
+</div>
+        </div>
+    }
+</div>
+

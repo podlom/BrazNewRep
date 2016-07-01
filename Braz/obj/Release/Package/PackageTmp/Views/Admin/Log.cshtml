@@ -1,0 +1,4 @@
+﻿@foreach(string line in ((string)ViewData["Logs"]).Split(Environment.NewLine.ToCharArray()))
+{
+    @line<br />
+}

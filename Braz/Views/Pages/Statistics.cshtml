@@ -1,0 +1,191 @@
+﻿@{
+    ViewBag.Title = "Статистика";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@*<div class="statBg"></div>*@
+<section class="mainStat">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="stat_title" aos="fade-down">
+                    Мировой рынок: сравнительная характеристика географической структуры потребления алюминия в 2013 г. и в 2025 г.
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div id="chart1" class="ct-chart ct-perfect-fourth" aos="fade-right">
+                    <div class="donYear">2013</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div id="chart2" class="ct-chart ct-perfect-fourth" aos="fade-left">
+                    <div class="donYear">2025</div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="stat_title" aos="zoom-in">
+                    Мировой рынок: сравнительная характеристика структуры потребления первичного и вторичного алюминия конечными потребителями в развитых и развивающихся странах в 2015 г.
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div id="chart3" class="ct-chart ct-perfect-fourth" aos="fade-up-right">
+                    <div class="donTitle">Развитые <br>страны</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div id="chart4" class="ct-chart ct-perfect-fourth" aos="fade-up-left">
+                    <div class="donTitle">Развивающиеся <br>страны</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="row">
+          <div class="col-md-10 col-md-offset-1 statTabs">
+            <ul class="tabControl">
+              <li class="active">2013 г.</li>
+              <li>2014 г.</li>
+              <li>2015 (янв. - авг) г.</li>
+            </ul>
+            <div class="ct-chart ct-perfect-fourth tabChart"></div>
+            <div class="ct-chart ct-perfect-fourth tabChart"></div>
+            <div class="ct-chart ct-perfect-fourth tabChart"></div>
+          </div>
+        </div> -->
+
+       <!-- <div class="row">
+            <div class="col-md-4">
+                <div class="bigTitle1" aos="fade-right" aos-delay="300">
+                    <div class="arr"></div>
+                    2013 г.
+                    <div class="arr"></div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="ct-chart ct-perfect-fourth" id="chart5"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="ct-chart ct-perfect-fourth" id="chart6"></div>
+            </div>
+            <div class="col-md-4">
+                <div class="bigTitle2" aos="fade-left" aos-delay="300">
+                    <div class="arr"></div>
+                    2014 г.
+                    <div class="arr"></div>
+                </div>
+            </div>
+        </div>-->
+
+
+       <!-- <div class="row">
+            <div class="bigTitle3" aos="fade-down" aos-delay="300">
+                <p>2015 (янв. - авг) г.</p>
+                <div class="arr"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="ct-chart ct-perfect-fourth" id="chart7"></div>
+            </div>
+        </div>
+
+
+
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="stat_title">
+                    Украина: географическая структура объема экспорта профиля алюминиевого полого "закрытого", 2010 - 2015 (янв - авг)
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="ct-chart ct-perfect-fourth" id="chart8"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="ct-chart ct-perfect-fourth" id="chart9"></div>
+            </div>
+            <div class="col-md-4 col-md-offset-4">
+                <div class="ct-chart ct-perfect-fourth" id="chart10"></div>
+            </div>
+        </div> -->
+
+
+
+
+        <br>
+        <br>
+        <br>
+        <br>
+        <div class="row">
+            <div class="col-md-6 lineBg">
+                <div class="ct-chart ct-perfect-fourth" id="line1"></div>
+            </div>
+            <div class="col-md-6">
+                <div class="stat_title">
+                    <br>
+                    <br>
+                    <br>
+                    Украина: динамика доли импорта в общем спросе и доли экспорта в общем предложении алюминия, 2012 - 2015 гг., %
+<div class="descrDiv">
+                  <div class="line blue1"></div>Доля импорта
+                </div>
+                <div class="descrDiv">
+                  <div class="line red"></div>Доля экспорта
+                </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="stat_title">
+                    <br>
+                    <br>
+                    <br>
+                    Украина: динамика доли импорта в общем спросе и доли экспорта в общем предложении алюминиевого профиля, 2012 - 2015 гг., %
+<div class="descrDiv">
+                  <div class="line violet"></div>Доля импорта
+                </div>
+                <div class="descrDiv">
+                  <div class="line green"></div>Доля экспорта
+                </div>
+                </div>
+            </div>
+            <div class="col-md-6 lineBg">
+                <div class="ct-chart ct-perfect-fourth" id="line2"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 lineBg">
+                <div class="ct-chart ct-perfect-fourth" id="line3"></div>
+            </div>
+            <div class="col-md-6">
+                <div class="stat_title">
+                    <br>
+                    <br>
+                    <br>
+                    Украина: динамика доли импорта в общем спросе и доли экспорта в общем предложении проволоки алюминиевой, 2012 - 2015 гг., %
+<div class="descrDiv">
+                  <div class="line blue2"></div>Доля импорта
+                </div>
+                <div class="descrDiv">
+                  <div class="line orange"></div>Доля экспорта
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

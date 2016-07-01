@@ -1,0 +1,26 @@
+﻿@{
+    string id = (string)ViewData["Item"];
+}
+<div id="deletemodal">
+    <div class="modal fade" id="DeleteItemModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Удалить позицию</h4>
+                </div>
+                <div class="modal-body container-fluid">
+                    Вы действительно хотите удалить позицию?<br />
+                    <a href="#" onclick="hidemodal()" class="btn btn-success" style="margin-right:80px; margin-left:30px;">Отмена</a>
+                    <a href="/catalog/DeleteProduct?itemid=@(id)" class="btn btn-danger">Удалить</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function hidemodal()
+    {
+        $("#DeleteItemModal").modal("hide");
+    }
+</script>

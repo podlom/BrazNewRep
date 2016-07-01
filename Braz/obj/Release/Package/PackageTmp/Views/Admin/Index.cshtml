@@ -1,0 +1,29 @@
+﻿@{ 
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Страница администратора";
+}
+<div class="admin-form">
+    @if (Session["User"] != HttpContext.Current.Application["Admin"])
+    {
+        using (Ajax.BeginForm("CheckAdmin", new { }, new AjaxOptions() { UpdateTargetId = "logfail" }, new { @class = "admin-form" }))
+        {
+            <div class="form-cent">E-mail<input class="admin-reg-input" name="email" id="email"/></div>
+            <div class="form-cent">Password<input class="admin-reg-input" name="password" id="password" type="password"/></div><br />
+            <div class="form-cent mgt12"><button class="btn btn-success" type="submit">Вход</button></div><br />
+            <div id="logfail"></div>
+        }
+    }
+    else
+    {
+        <div class="form-cent admin-form">
+            <p>Вы сейчас в режиме администратора</p>
+            <a class="btn btn-success admin-buttons" href="/Admin/Posts" style="margin:0 40px 10px 0;">Работа с новостями</a>
+            <a class="btn btn-success admin-buttons" href="/Catalog" style="margin-bottom:10px;">Работа с каталогом</a><br />
+            <a class="btn btn-success admin-buttons" href="/Admin/Log" style="margin:0 40px 10px 0;">Логи</a>
+            <a class="btn btn-success admin-buttons" href="/Admin/Settings" style="margin-bottom:10px;">Общие настройки</a><br />
+            <a class="btn btn-success admin-buttons" href="/Admin/Vacancies" style="margin:0 0 10px 0">Работа с вакансиями</a><br />
+            <a class="btn btn-danger" href="/Pages/Exit">Выход</a>
+        </div>
+    }
+</div>
+<div id="logfail"></div>
