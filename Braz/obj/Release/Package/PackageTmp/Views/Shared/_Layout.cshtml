@@ -1,7 +1,5 @@
 ﻿@{ 
-    var global = (Dictionary<string, Dictionary<int, Dictionary<string, string>>>)HttpContext.Current.Application["Localization"];
-    string lang = (string)HttpContext.Current.Session["lang"];
-    var inlang = global[lang];
+    var local = ((Dictionary<string, Dictionary<int, Dictionary<string, string>>>)HttpContext.Current.Application["Localization"])[(string)Session["lang"]];
 }
 
 <!DOCTYPE html>
@@ -9,11 +7,12 @@
 <head>
     <meta charset="utf-8">
     <title>@ViewBag.Title</title>
-    <meta name="description" content="">
+    @RenderSection("PageMeta",false)
     <link rel="shortcut icon" href="~/Content/img/favicon/favicon.ico" type="image/x-icon">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     @RenderSection("PageStyle", false)
+   
     <link rel="stylesheet" href="~/Content/css/vendor.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="~/Content/css/main.min.css">
@@ -29,43 +28,45 @@
         <div class="collapse navbar-collapse" id="menu">
             <ul>
  <li>
-                    <a href="/">@inlang[0]["NavbarTitle"]</a>
+                    <a href="/">@local[0]["NavbarTitle"]</a>
                 </li>
 
                 <li>
-                    <a href="#">@inlang[0]["About"]</a>
+                    <a href="#">@local[0]["About"]</a>
                     <ul class="dd_menu">
 
-                        <li class="hideMob">@Html.ActionLink(inlang[1]["Title"], "Story", "Pages")</li>
-                        <li>@Html.ActionLink(inlang[2]["Title"], "Group", "Pages", new { Section = "BrazConstruction" }, new { })</li>
-                        <li  class="hideMob">@Html.ActionLink(inlang[3]["Title"], "Statistics", "Pages")</li>
+                        <li>@Html.ActionLink(@local[1]["Title"], "Story", "Pages")</li>
+                        <li><a href="/Pages/Group/BrazConstruction">@local[2]["Title"]</a></li>
+                        <li>@Html.ActionLink(local[3]["Title"], "Statistics", "Pages")</li>
                     </ul>
                 </li>
                 <li>
-                    <a href="#">@inlang[4]["Title"]</a>
+                    <a href="#">@local[4]["Title"]</a>
                     <ul class="dd_menu">
-                        <li>@Html.ActionLink(inlang[4]["Standart"], "Index", "Catalog", new { cat = 0 }, new { })</li>
-                        <li>@Html.ActionLink(inlang[4]["Notstandart"], "Index", "Catalog", new { cat = 33 }, new { })</li>
+                        <li><a href="/Catalog/Index/polosa">@local[4]["Standart"]</a></li>
+                        <li><a href="/Catalog/Index/ventilyacionnyj_profil">@local[4]["Notstandart"]</a></li>
                     </ul>
                 </li>
                 <li>
-                    <a href="#">@inlang[0]["NavbarProd"]</a>
+                    <a href="#">@local[0]["NavbarProd"]</a>
                     <ul class="dd_menu">
-                        @{int i = 0; }
-                        @foreach(KeyValuePair<string,string> pair in (Dictionary<string, string>)HttpContext.Current.Application["ProductionCategories"])
+                        @for(int i=0;i<9;i++)
                         {
-                            <li><a href="@("/Pages/Production/"+pair.Key)">@inlang[5]["Title-"+(i++).ToString()]</a></li>
+                            <li><a href=@("/Pages/Production/"+((List<string>)HttpContext.Current.Application["ProductionCategories"])[i])>@local[5]["Title-"+i.ToString()]</a></li>
                         }
+                        <li><a href="/Pages/Services/">@local[10]["Title"]</a></li>
                     </ul>
                 </li>
 <li>
-                    <a href="#">@inlang[0]["NavbarPress"]</a>
+                    <a href="#">@local[0]["NavbarPress"]</a>
                     <ul class="dd_menu">
-                        <li>@Html.ActionLink(inlang[6]["Title"], "Index", "Blog")</li>
-                        <li>@Html.ActionLink(inlang[8]["Title"], "chasto_zadavaemye_voprosy", "Pages")</li>
+                        <li>@Html.ActionLink(local[6]["Title"], "Index", "Blog")</li>
+                        <li>@Html.ActionLink(local[8]["Title"], "chasto_zadavaemye_voprosy", "Pages")</li>
                     </ul>
                 </li>
-                <li>@Html.ActionLink(inlang[9]["Title"], "Contacts", "Pages")</li>
+<li><a href="/#sellers_s">@local[0]["NavbarSellers"]</a></li>
+<!--<li><a href="/Vacancy">Вакансии</a></li>-->
+                <li>@Html.ActionLink(local[9]["Title"], "Contacts", "Pages")</li>
                 @if (((Braz.Models.User)Session["User"]) != (Braz.Models.User)HttpContext.Current.Application["Admin"])
                 {
                     if ((bool)Session["Logged"])
@@ -74,11 +75,11 @@
                         <li><a href="#"><i class="fa fa-shopping-cart"><div class="label">@if ((Braz.Models.User)Session["User"] != null)
                         { <text>@(((Braz.Models.User)Session["User"]).CurrOrder.Cart.Count)</text> }</div></i></a></li>
 
-                        <li><a href="/Pages/Exit" class="main_color">@inlang[0]["NavbarExit"]</a></li>
+                        <li><a href="/Pages/Exit" class="main_color">@local[0]["NavbarExit"]</a></li>
                     }
                     else
                     {
-                        <li><a href="#" class="main_color" data-toggle="modal" data-target="#regModal">@inlang[0]["NavbarReg"]</a></li>
+                        <li><a href="#" class="main_color" data-toggle="modal" data-target="#regModal">@local[0]["NavbarReg"]</a></li>
                     }
                 }
             </ul>
@@ -88,37 +89,76 @@
     @RenderSection("HomeHeaderEnd", false)
     
 
-    <div class="breadcrumbs">
+    @*<div class="breadcrumbs">
         @{
             string BcBase = Context.Request.Path.ToString();
          }
         @Html.Raw(GetBreadcrumbs(BcBase))
-    </div>
+    </div>*@
 
 
     @RenderBody()
 
+ <footer>
+        <div class="soc_block">
+            <div class="item">
+                <a href="https://www.facebook.com/braz.industries/" target="_blank">
+                    <i class="fa fa-facebook"></i>
+                </a>
+            </div>
+            <div class="item">
+                <a href="">
+                    <i class="fa fa-twitter"></i>
+                </a>
+            </div>
+            <div class="item">
+                <a href="">
+                    <i class="fa fa-linkedin"></i>
+                </a>
+            </div>
+            <div class="item">
+                <a href="https://plus.google.com/108630417052860007244" target="_blank">
+                    <i class="fa fa-google-plus"></i>
+                </a>
+            </div>
+            <div class="item">
+                <a href="https://www.youtube.com/channel/UC1T9si7nLVStmCxWFce942Q" target="_blank">
+                    <i class="fa fa-youtube"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="copyright">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 col-md-offset-4">
+                        Сopyright©2016
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <div class="modal fade" id="regModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Регистрация</h4>
+                    <h4 class="modal-title" id="myModalLabel">@local[0]["NavbarReg"]</h4>
                 </div>
                 <div class="modal-body">
 
                     @using (Html.BeginForm("AddUser", "Pages", FormMethod.Post))
                     {
-                        <input type="text" name="name" placeholder="Как к вам обращаться?" required><br>
-                        <input type="email" name="email" placeholder="Ваш E-Mail" required><br>
-                        <input type="text" name="phone" placeholder="На какой номер перезвонить?" required><br>
-                        <input type="password" placeholder="Придумайте пароль" required><br>
-                        <input type="password" name="password" placeholder="Повторите пароль" required><br>
+                        <input type="text" name="name" placeholder="@local[0]["RegPHName"]" required><br>
+                        <input type="email" name="email" placeholder="@local[0]["RegPHEmail"]" required><br>
+                        <input type="text" name="phone" placeholder="@local[0]["RegPHPhone"]" required><br>
+                        <input type="password" placeholder="@local[0]["RegPHPass"]" required><br>
+                        <input type="password" name="password" placeholder="@local[0]["RegPHRepeatPass"]" required><br>
 
-                        <input type="submit" class="submit" value="Регистрация">
-                        <p>Уже зарегистрированы?</p>
-                        <a href="#" onclick=" $('#regModal').modal('hide');" class="btn-block submit" data-toggle="modal" data-target="#loginModal" style="text-align:center">Войти</a>
+                        <input type="submit" class="submit" value="@local[0]["NavbarReg"]">
+                        <p>@local[0]["RegAlready"]</p>
+                        <a href="#" onclick=" $('#regModal').modal('hide');" class="btn-block submit" data-toggle="modal" data-target="#loginModal" style="text-align:center">@local[0]["NavbarEnter"]</a>
                     }
 
                 </div>
@@ -132,15 +172,15 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Войти</h4>
+                    <h4 class="modal-title" id="myModalLabel">@local[0]["NavbarEnter"]</h4>
                 </div>
                 <div class="modal-body">
                     @using (Ajax.BeginForm("CheckUser", "Pages", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "response", HttpMethod = "POST" }))
                     {
-                        <input type="email" name="email" placeholder="E-Mail" required><br>
-                        <input type="password" name="password" placeholder="Пароль" required><br>
+                        <input type="email" name="email" placeholder="@local[0]["RegPHEmail"]" required><br>
+                        <input type="password" name="password" placeholder="@local[0]["RegPHPass"]" required><br>
                         <p id="response"></p><br />
-                        <input type="submit" class="submit" value="Войти">
+                        <input type="submit" class="submit" value="@local[0]["NavbarEnter"]">
                     }
 
                 </div>
@@ -165,6 +205,48 @@ AOS.init({
 (function(){ var widget_id = 'Qt94VI2vbJ';var d=document;var w=window;function l(){ 
 var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = '//code.jivosite.com/script/widget/'+widget_id; var ss = document.getElementsByTagName('script')[0]; ss.parentNode.insertBefore(s, ss);}if(d.readyState=='complete'){l();}else{if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();</script> 
 <!— {/literal} END JIVOSITE CODE —>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function (d, w, c) {
+        (w[c] = w[c] || []).push(function() {
+            try {
+                w.yaCounter37839110 = new Ya.Metrika({
+                    id:37839110,
+                    clickmap:true,
+                    trackLinks:true,
+                    accurateTrackBounce:true,
+                    webvisor:true,
+                    trackHash:true,
+                    ut:"noindex",
+                    ecommerce:"dataLayer"
+                });
+            } catch(e) { }
+        });
+
+        var n = d.getElementsByTagName("script")[0],
+            s = d.createElement("script"),
+            f = function () { n.parentNode.insertBefore(s, n); };
+        s.type = "text/javascript";
+        s.async = true;
+        s.src = "https://mc.yandex.ru/metrika/watch.js";
+
+        if (w.opera == "[object Opera]") {
+            d.addEventListener("DOMContentLoaded", f, false);
+        } else { f(); }
+    })(document, window, "yandex_metrika_callbacks");
+</script>
+<!-- /Yandex.Metrika counter -->
+<!--LiveInternet counter--><script type="text/javascript"><!--
+document.write("<a href='//www.liveinternet.ru/click' "+
+"target=_blank><img src='//counter.yadro.ru/hit?t26.6;r"+
+escape(top.document.referrer)+((typeof(screen)=="undefined")?"":
+";s"+screen.width+"*"+screen.height+"*"+(screen.colorDepth?
+screen.colorDepth:screen.pixelDepth))+";u"+escape(document.URL)+
+";h"+escape(document.title.substring(0,80))+";"+Math.random()+
+"' alt='' title='LiveInternet: показано число посетителей за"+
+" сегодня' "+
+"border='0' width='88' height='15'><\/a>")
+//--></script><!--/LiveInternet-->
 </body>
 
 </html>

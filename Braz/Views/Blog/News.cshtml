@@ -1,6 +1,11 @@
 ﻿@{
+    if ((string)HttpContext.Current.Session["Lang"] == "English")
+    {
+        System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+    }
     Braz.Models.Post post = (Braz.Models.Post)ViewData["Post"];
-    ViewBag.Title = post.Header;
+    Dictionary<string, string> local = (Dictionary<string, string>)ViewData["Local"];
+    ViewBag.Title = local["Header-"+post.Id.ToString()];
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @section PageStyle
@@ -46,13 +51,10 @@
         </div>
         <div aos="fade-up" aos-delay="300" class="news_title">
             <h4>
-                @post.Header
+                @local["Header-" + post.Id.ToString()]
             </h4>
             <div class="line"></div>
-            @{ 
-                System.Globalization.CultureInfo cult = new System.Globalization.CultureInfo("ru-RU");
-            }
-            <p>@post.Date.ToString("d MMM yyyy",cult)</p>
+            <p>@post.Date.ToString("d MMM yyyy", System.Threading.Thread.CurrentThread.CurrentCulture)</p>
             <div class="news_soc">
                 <div class="container">
                     <!--<div class="socials" style="width:100px;margin:20px; left:0px;">
@@ -78,7 +80,7 @@
     </div>
     <div class="col">
         <article style="text-align:left;" aos="fade-down" aos-delay="400">
-            @Html.Raw(post.Text)
+            @Html.Raw(local["Text-" + post.Id.ToString()])
         </article>
         <div class="news_nav" aos="fade-left" aos-delay="500">
             @if (post.Previous != null)

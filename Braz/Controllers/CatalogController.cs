@@ -13,6 +13,9 @@ namespace Braz.Controllers
 
         public ActionResult Index()
         {
+            //localization
+            ViewData["Local"] = ((Dictionary<string, Dictionary<int, Dictionary<string, string>>>)HttpContext.Application["Localization"])[(string)Session["Lang"]][4];
+
             ViewData["CatList"] = Models.SubCategory.GetCatalog();
             string path = Request.RawUrl;
             path = path.Substring(path.LastIndexOf('/')+1);
@@ -26,7 +29,10 @@ namespace Braz.Controllers
         }
         //get list view subcategory
         public ActionResult ListView()
-        {
+        {  
+            //localization
+            ViewData["Local"] = ((Dictionary<string, Dictionary<int, Dictionary<string, string>>>)HttpContext.Application["Localization"])[(string)Session["Lang"]][4];
+
             ViewData["Items"] = Models.SubCategory.GetCatList(Int32.Parse(Request.QueryString["catid"]));
             ViewData["SubCategory"] = Models.SubCategory.GetSubCategory(Int32.Parse(Request.QueryString["catid"]));
             return PartialView("ListView");
@@ -34,6 +40,9 @@ namespace Braz.Controllers
         //get table view subcategory
         public ActionResult TableView()
         {
+            //localization
+            ViewData["Local"] = ((Dictionary<string, Dictionary<int, Dictionary<string, string>>>)HttpContext.Application["Localization"])[(string)Session["Lang"]][4];
+
             ViewData["Items"] = Models.SubCategory.GetCatList(Int32.Parse(Request.QueryString["catid"]));
             ViewData["SubCategory"] = Models.SubCategory.GetSubCategory(Int32.Parse(Request.QueryString["catid"]));
             return PartialView("TableView");
@@ -58,6 +67,9 @@ namespace Braz.Controllers
         //LOAD MODALS
         public ActionResult GetBuyProduct()
         {
+            //localization
+            ViewData["Local"] = ((Dictionary<string, Dictionary<int, Dictionary<string, string>>>)HttpContext.Application["Localization"])[(string)Session["Lang"]][4];
+
             ViewData["ItemId"] = Request.QueryString["itemid"];
             ViewData["CatId"] = Models.Item.GetItem(Int32.Parse(Request.QueryString["itemid"]));
             ViewData["IsLoggedIn"] = Session["Logged"];

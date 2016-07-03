@@ -1,5 +1,6 @@
 ﻿@using Braz.Models;
 @{
+    var local = (Dictionary<string, string>)ViewData["Local"];
     List<Item> ItemList = (List<Item>)ViewData["Items"];
     SubCategory SubCat = (SubCategory)ViewData["SubCategory"];
 }
@@ -18,13 +19,20 @@
         <table class="table table-hover table-bordered nonst_table">
             <thead>
                 <tr>
-                    @foreach(Parameter param in SubCat.Params)
-                    { 
-                        <th class="text-center">@param.Value</th>
+                    @foreach (Parameter param in SubCat.Params)
+                    {
+                        if (param.Value == "Артикул")
+                        {
+                            <th class="text-center">@(local["ParamArticle"])</th>
+                        }
+                        else
+                        {
+                            <th class="text-center">@param.Value</th>
+                        }
                     }
                     @if (Session["User"] != HttpContext.Current.Application["Admin"])
                     {
-                        <th class="text-center">Заказать</th>
+                        <th class="text-center">@local["Order"]</th>
                     }
                     else
                     {

@@ -1,5 +1,6 @@
 ﻿@using Braz.Models;
 @{ 
+    var local = (Dictionary<string, string>)ViewData["Local"];
     List<Item> ItemList = (List<Item>)ViewData["Items"];
     SubCategory category = (SubCategory)ViewData["SubCategory"];
 }
@@ -7,7 +8,7 @@
     @foreach(Item item in ItemList)
     {
         <div class="item">
-            <div class="img_block" style=" background-image: url('Content/img/catalog/cat-@(category.Id.ToString())/@(item.Id.ToString()).2.jpg');" onMouseOver="this.style.backgroundImage = 'url(\'Content/img/catalog/cat-@(category.Id.ToString())/@(item.Id.ToString()).1.jpg\')' " onMouseOut="this.style.backgroundImage = 'url(\'Content/img/catalog/cat-@(category.Id.ToString())/@(item.Id.ToString()).2.jpg\')' ">
+            <div class="img_block" style=" background-image: url('/Content/img/catalog/cat-@(category.Id.ToString())/@(item.Id.ToString()).2.jpg');" onMouseOver="this.style.backgroundImage = 'url(\'/Content/img/catalog/cat-@(category.Id.ToString())/@(item.Id.ToString()).1.jpg\')' " onMouseOut="this.style.backgroundImage = 'url(\'/Content/img/catalog/cat-@(category.Id.ToString())/@(item.Id.ToString()).2.jpg\')' ">
                 <div class="title">
                     @ViewData["CatName"]
                 </div>
@@ -18,13 +19,20 @@
             <table class="table table-hover table-bordered nonst_table">
                 <thead>
                     <tr>
-                        @foreach(Parameter param in category.Params)
-                        { 
-                            <th class="text-center">@param.Value</th>
+                        @foreach (Parameter param in category.Params)
+                        {
+                            if (param.Value == "Артикул")
+                            {
+                                <th class="text-center">@(local["ParamArticle"])</th>
+                            }
+                            else
+                            {
+                                <th class="text-center">@param.Value</th>
+                            }
                         }
                         @if (Session["User"] != HttpContext.Current.Application["Admin"])
                         {
-                            <th class="text-center">Заказать</th>
+                            <th class="text-center">@local["Order"]</th>
                         }
                         else
                         {

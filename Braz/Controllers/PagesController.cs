@@ -11,13 +11,18 @@ namespace Braz.Controllers
         public ActionResult Index()
         {
             ViewData["Translation"] = ((Dictionary<string,Dictionary<int,Dictionary<string,string>>>)HttpContext.Application["Localization"])[(string)Session["lang"]][0];
+            ViewData["CatalogTrans"] = ((Dictionary<string,Dictionary<int,Dictionary<string,string>>>)HttpContext.Application["Localization"])[(string)Session["lang"]][4];
             ViewData["Posts"] = Models.Post.GetPosts();
+            ViewData["PostTrans"] = ((Dictionary<string,Dictionary<int,Dictionary<string,string>>>)HttpContext.Application["Localization"])[(string)Session["lang"]][7];
             return View();
         }
         //PROFILE VIEW 
         public ActionResult Profile()
         {
-            if(!(bool)Session["Logged"])
+            //Localization
+            ViewData["Local"] = ((Dictionary<string, Dictionary<int, Dictionary<string, string>>>)HttpContext.Application["Localization"])[(string)Session["lang"]][11];
+
+            if (!(bool)Session["Logged"])
                 return Redirect("~/");
             ViewData["User"] = Session["User"];
             ViewData["History"] = Models.Order.GetUserOrders(((Models.User)Session["User"]).Id);
@@ -25,28 +30,34 @@ namespace Braz.Controllers
         }
         public ActionResult Story()
         {
+            ViewData["Local"] = ((Dictionary<string, Dictionary<int, Dictionary<string, string>>>)HttpContext.Application["Localization"])[(string)Session["lang"]][1];
             return View("Story");
         }
         public ActionResult Services()
         {
+            ViewData["Local"] = ((Dictionary<string, Dictionary<int, Dictionary<string, string>>>)HttpContext.Application["Localization"])[(string)Session["lang"]][10];
             return View("Services");
         }
         public ActionResult Production(string income)
         {
+            ViewData["Local"] = ((Dictionary<string, Dictionary<int, Dictionary<string, string>>>)HttpContext.Application["Localization"])[(string)Session["lang"]][5];
             string k = Request.Path.Substring(Request.Path.LastIndexOf('/') + 1);
             ViewData["Page"] = k;
             return View("Production");
         }
         public ActionResult Statistics()
         {
+            ViewData["Local"] = ((Dictionary<string, Dictionary<int, Dictionary<string, string>>>)HttpContext.Application["Localization"])[(string)Session["lang"]][3];
             return View();
         }
         public ActionResult Contacts()
         {
+            ViewData["Local"] = ((Dictionary<string, Dictionary<int, Dictionary<string, string>>>)HttpContext.Application["Localization"])[(string)Session["lang"]][9];
             return View();
         }
         public ActionResult Group()
         {
+            ViewData["Local"] = ((Dictionary<string, Dictionary<int, Dictionary<string, string>>>)HttpContext.Application["Localization"])[(string)Session["lang"]][2];
             string path = Request.RawUrl;
             path = path.Substring(path.LastIndexOf('/') + 1);
             ViewData["Section"] = path;
@@ -54,6 +65,7 @@ namespace Braz.Controllers
         }
         public ActionResult chasto_zadavaemye_voprosy()
         {
+            ViewData["Local"] = ((Dictionary<string, Dictionary<int, Dictionary<string, string>>>)HttpContext.Application["Localization"])[(string)Session["lang"]][8];
             return View();
         }
         //404 VIEW
@@ -64,18 +76,27 @@ namespace Braz.Controllers
         //LANGUAGE CHANGE
         public ActionResult ChangeLang()
         {
-            Session["lang"] = Request.QueryString["Lang"];
+            if (((List<string>)HttpContext.Application["Languages"]).Contains(Request.QueryString["Lang"]))
+            {
+                Session["lang"] = Request.QueryString["Lang"];
+                if(Request.QueryString["Lang"]=="English")System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+                else System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("ru-RU");
+            }
+            else
+                return Redirect("/");
             HttpCookie cookie = Request.Cookies["lang"];
             if (cookie != null)
-                Response.Cookies["lang"].Value = Request.QueryString["Lang"];   
+            {
+                Response.Cookies["lang"].Value = Request.QueryString["Lang"];
+            }
             else
             {
                 cookie = new HttpCookie("lang");
                 cookie.HttpOnly = false;
                 cookie.Value = Request.QueryString["Lang"];
                 cookie.Expires = DateTime.Now.AddYears(1);
+                Response.Cookies.Add(cookie);
             }
-            Response.Cookies.Add(cookie);
             return Redirect("/");
         }
 

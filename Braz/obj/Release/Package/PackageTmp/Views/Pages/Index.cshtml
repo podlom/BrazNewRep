@@ -1,6 +1,12 @@
 ﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    Dictionary<string, string> local = (Dictionary<string,string>)ViewData["Translation"];
+    var local = (Dictionary<string, string>)ViewData["Translation"];
+    var catalog = (Dictionary<string, string>)ViewData["CatalogTrans"];
+    var post = (Dictionary<string, string>)ViewData["PostTrans"];
+    if((string)HttpContext.Current.Session["Lang"]=="English")
+    {
+        System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+    }
     ViewBag.Title = local["Title"];
 }
 @section MainSlider
@@ -14,7 +20,14 @@
         <path class="a3" d="M0 40 L30 72 L60 40"></path>
     </svg>
 }
+@section PageMeta
+{
 
+<div style="display:inline;">
+<img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconvers.."/>
+</div>
+</noscript>
+}
 <section class="quote_s">
     <div class="container">
         <div class="row">
@@ -29,12 +42,11 @@
                 <div class="quote_block" aos="fade-left" aos-duration="800">
 
                     <p>
-                        «Дорогие партнеры, я рад приветствовать вас на сайте Броварского Алюминиевого Завода, входящего в состав группы компаний Алюмета. На сегодняшний день мы представляем собой современную инвестиционно-промышленную группу, в которую входят крупнейшие компании Украины - лидеры своей отрасли. Стратегия группы компаний основана на использовании синергетического потенциала входящих в группу предприятий, а наше главное преимущество - это неизменно высокое качество продукции и услуг, предоставляемых нашим клиентам не только на территории Украины, но и за её пределами. В частности, продукция наших компаний используется более чем в 14 европейских странах, а также странах ближнего востока. Мы постоянно инвестируем в новейшие технологические разработки, удачно внедряя их на наших предприятиях, а также используем современную систему менеджмента путём привлечения высококлассных специалистов со всего мира. С момента создания группы компаний Алюмета наши принципы ведения бизнеса основаны исключительно на открытости и прозрачности.
-»
+                        «@local["ShapranSpeech"]»
                     </p>
-                    <h3>Шапран Сергей </h3>
+                    <h3>@local["ShapranName"]</h3>
                     <div class="line"></div>
-                    <span>Учредитель, Глава правления группы компаний «Alumeta»</span>
+                    <span>@local["WhoShapran"]</span>
                 </div>
             </div>
         </div>
@@ -45,7 +57,7 @@
     <div class="overlay">
         <div class="title_block">
             <h2>
-                Группа компаний
+                @local["CompGroup"]
             </h2>
             <div class="line"></div>
         </div>
@@ -60,32 +72,32 @@
                     <div class="item">
                         <a href="/"><img src="~/Content/img/companies/ind.png" class="img-responsive" alt="" aos="fade-right"></a>
                         <p class="compDescr" style="width: 140%; left: -20%">
-                           Броварской алюминиевый завод - инновационное предприятие замкнутого цикла по производству алюминиевого профиля
+                            @local["BrazDescr"]
                         </p>
                     </div>
                     <div class="item">
-                        <a href="/Pages/Group?Section=BrazLine"><img src="~/Content/img/companies/line.png" class="img-responsive" alt="" aos="fade-right" aos-delay="100"></a>
+                        <a href="/Pages/Group/BrazLine"><img src="~/Content/img/companies/line.png" class="img-responsive" alt="" aos="fade-right" aos-delay="100"></a>
                         <p class="compDescr" style="width: 140%; left: -20%">
-                            Браз Лайн - производственно-конструкторская компания, производящая готовые изделия из алюминия
+                            @local["LineDescr"]
                         </p>
                     </div>
 <div class="item">
-                        <a href="/Pages/Group?Section=Acore"><img src="~/Content/img/companies/acore.png" class="img-responsive" alt="" aos="fade-right" aos-delay="400"></a>
+                        <a href="/Pages/Group/Acore"><img src="~/Content/img/companies/acore.png" class="img-responsive" alt="" aos="fade-right" aos-delay="400"></a>
                         <p class="compDescr" style="width: 140%; left: -20%">
-                            Акор Девелопмент - проектно-строительная компания
+                            @local["AcoreDescr"]
                         </p>
                     </div>
-                    <div class="item">
-                        <a href="/Pages/Group?Section=teploEnergy"><img src="~/Content/img/companies/trade.png" class="img-responsive" alt="" aos="fade-right" aos-delay="200"></a>
+                    <!-- <div class="item">
+                        <a href="/Pages/Group/teploEnergy"><img src="~/Content/img/companies/trade.png" class="img-responsive" alt="" aos="fade-right" aos-delay="200"></a>
                         <p class="compDescr" style="width: 140%; left: -20%">
                             Броварытеплоэнергия - крупнейшая в Украине инновационная компания по производству альтернативных источников тепла и электроэнергии
                         </p>
-                    </div>
+                    </div> -->
                     <div class="item">
-                        <a href="/Pages/Group?Section=BrazConstruction"><img src="~/Content/img/companies/const.png" class="img-responsive" alt="" aos="fade-right" aos-delay="300"></a>
+                        <a href="/Pages/Group/BrazConstruction"><img src="~/Content/img/companies/const.png" class="img-responsive" alt="" aos="fade-right" aos-delay="300"></a>
                         <p class="compDescr" style="width: 140%; left: -20%">
-                           Браз Констракшн - инжиниринговая компания -производитель алюминиевых профильных систем
-                        </p>
+                            @local["ConstrDescr"]
+                        </p>    
                     </div>
                     
 <!--<div class="item">
@@ -97,20 +109,23 @@
     </div>
 </section>
 <section class="video_s">
-    <div class="title_block">
+<!-- <div class="break1"></div> -->
+    <!-- <div class="title_block">
             <h2>
                 Видеопрезентация Броварского Алюминиевого Завода
             </h2>
             <div class="line"></div>
-        </div>
-    <iframe id="youtubeVideo" src="https://www.youtube.com/embed/or044BVk_sQ?rel=0&showinfo=0" frameborder="0" allowfullscreen></iframe>
+        </div> -->
+
+    <iframe id="youtubeVideo" width="1280" height="720" src="https://www.youtube.com/embed/qGhiAiQB4-E?rel=0&showinfo=0" frameborder="0" allowfullscreen></iframe>
+    <!-- <div class="break2"></div> -->
 </section>
 <!-- advantages SCREEN -->
 
 <section class="adv_s" id="adv_s">
     <div class="title_block">
         <h2>
-            Преимущества
+            @local["AdvantTitle"]
         </h2>
         <div class="line"></div>
     </div>
@@ -128,7 +143,7 @@
                             <div class="border"></div>
                             <div class="border"></div>
                             <div class="border"></div>
-                            Внедрен полный цикл производства от литья до выпуска готовых деталей
+                            @local["AdvantFull"]
                         </h4>
                     </div>
                 </div>
@@ -142,7 +157,7 @@
                             <div class="border"></div>
                             <div class="border"></div>
                             <div class="border"></div>
-                            Используем современное высокотехнологичное оборудование
+                            @local["AdvantSuper"]
                         </h4>
                     </div>
                 </div>
@@ -156,7 +171,7 @@
                             <div class="border"></div>
                             <div class="border"></div>
                             <div class="border"></div>
-                           Производительная мощность завода более 1800 т. в месяц алюминиевой продукции
+                           @local["AdvantProiz"]
                         </h4>
                     </div>
                 </div>
@@ -170,7 +185,7 @@
                             <div class="border"></div>
                             <div class="border"></div>
                             <div class="border"></div>
-                            Наличие сертифицированной спектральной и химической лаборатории.
+                            @local["AdvantLaba"]
                         </h4>
                     </div>
                 </div>
@@ -184,7 +199,7 @@
                             <div class="border"></div>
                             <div class="border"></div>
                             <div class="border"></div>
-                            Система контроля качества ISO2015
+                            @local["AdvantQuality"]
                         </h4>
                     </div>
                 </div>
@@ -198,7 +213,7 @@
                             <div class="border"></div>
                             <div class="border"></div>
                             <div class="border"></div>
-                            40-ка летний опыт производства алюминиевого профиля
+                            @local["Advant40"]
                         </h4>
                     </div>
                 </div>
@@ -212,7 +227,7 @@
                             <div class="border"></div>
                             <div class="border"></div>
                             <div class="border"></div>
-                            Работают высококвалифицированные специалисты со всего мира
+                            @local["AdvantSpec"]
                         </h4>
                     </div>
                 </div>
@@ -237,7 +252,7 @@
         <div class="container">
             <div class="title_block">
                 <h2>
-                    Отдел продаж
+                    @local["SellersTitle"]
                 </h2>
                 <div class="line"></div>
             </div>
@@ -247,11 +262,11 @@
                         <div class="photo">
                             <img src="~/Content/img/sellers/2.jpg" class="img-responsive" alt="">
                         </div>
-                        <h5>Пахолок Вячеслав <span>Менеджер</span> </h5>
+                        <h5>@local["SellerPaxolok"] <span>@local["Manager"]</span> </h5>
                         <p>
                             <span>E-Mail: </span><a href="mailto:paholok@braz.com.ua">paholok@braz.com.ua</a> <br>
-                            <span>Тел.:</span>  <a href="tel:+38(067)461-66-40">+38(067)461-66-40</a> <br>
-                            <span>Тел.:</span> <a href="tel:044 579 90 18">044 579 90 18</a>
+                            <span>@local["Phone"]:</span>  <a href="tel:+38(067)461-66-40">+38(067)461-66-40</a> <br>
+                            <span>@local["Phone"]:</span> <a href="tel:044 579 90 18">044 579 90 18</a>
                         </p>
 
                     </div>
@@ -262,11 +277,11 @@
                         <div class="photo">
                             <img class="img-responsive" src="~/Content/img/sellers/1.jpg" alt="">
                         </div>
-                        <h5>Шаталов Александр <span>Руководитель отдела</span> </h5>
+                        <h5>@local["SellerShatalov"] <span>@local["Topmanager"]</span> </h5>
                         <p>
                             <span>E-Mail: </span><a href="mailto:a.shatalov@braz.com.ua"></a>a.shatalov@braz.com.ua <br>
-                            <span>Тел.:</span> <a href="tel:+38(067)327-53-25">+38(067)327-53-25</a><br>
-                            <span>Тел.:</span> <a href="tel:044 579 90 18">044 579 90 18</a>
+                            <span>@local["Phone"]:</span> <a href="tel:+38(067)327-53-25">+38(067)327-53-25</a><br>
+                            <span>@local["Phone"]:</span> <a href="tel:044 579 90 18">044 579 90 18</a>
                         </p>
 
                     </div>
@@ -277,11 +292,11 @@
                         <div class="photo">
                             <img class="img-responsive" src="~/Content/img/sellers/3.jpg" alt="">
                         </div>
-                        <h5>Попов Игорь <span>Менеджер</span> </h5>
+                        <h5>@local["SellerPopov"] <span>@local["Manager"]</span> </h5>
                         <p>
                             <span>E-Mail:</span> <a href="mailto:popov.i@braz.com.ua "></a>popov.i@braz.com.ua  <br>
-                            <span>Тел:</span> <a href="tel:+380 4616625">+38(067)461-66-25</a> <br>
-                            <span>Тел.:</span> <a href="tel:044 579 90 18">044 579 90 18</a>
+                            <span>@local["Phone"]</span> <a href="tel:+380 4616625">+38(067)461-66-25</a> <br>
+                            <span>@local["Phone"]:</span> <a href="tel:044 579 90 18">044 579 90 18</a>
                         </p>
 
                     </div>
@@ -292,11 +307,11 @@
                         <div class="photo">
                             <img class="img-responsive" src="~/Content/img/sellers/4.jpg" alt="">
                         </div>
-                        <h5>Нестерец Вячеслав <span>Менеджер</span> </h5>
+                        <h5>@local["SellerNesterec"] <span>@local["Manager"]</span> </h5>
                         <p>
                             <span>E-MAil:</span> <a href="mailto:v.nesterets@braz.com.ua"></a>v.nesterets@braz.com.ua <br>
-                            <span>Тел.:</span>  <a href="tel:+38(067)327-53-02">+38(067)327-53-02</a> <br>
-                            <span>Тел.:</span> <a href="tel:044 579 90 18">044 579 90 18</a>
+                            <span>@local["Phone"]:</span>  <a href="tel:+38(067)327-53-02">+38(067)327-53-02</a> <br>
+                            <span>@local["Phone"]:</span> <a href="tel:044 579 90 18">044 579 90 18</a>
                         </p>
 
                     </div>
@@ -305,13 +320,13 @@
                 <div class="col-md-4 col-sm-6 col-xs-12">
                     <div class="seller_block" aos="flip-left" aos-delay="800" aos-duration="800">
                         <div class="photo">
-                            <img class="img-responsive" src="~/Content/img/sellers/5.jpg" alt="">
+                            <img class="img-responsive" src="~/Content/img/sellers/7.jpg" alt="">
                         </div>
-                        <h5>Наконечный Александр <span>Менеджер</span> </h5>
+                        <h5>@local["SellerFedorov"] <span>@local["Manager"]</span> </h5>
                         <p>
-                            <span>E-Mail: </span><a href="mailto:a.nakonechniy@braz.com.ua"></a>a.nakonechniy@braz.com.ua <br>
-                            <span>Тел.:</span>  <a href="tel:+38(067)329-53-23">+38(067)329-53-23</a><br>
-                            <span>Тел.:</span> <a href="tel:044 579 90 18">044 579 90 18</a>
+                            <span>E-Mail: </span><a href="mailto:fedorov@braz.industries"></a>fedorov@braz.industries <br>
+                            <!-- <span>Тел.:</span>  <a href="tel:+38(067)329-53-23">+38(067)329-53-23</a><br> -->
+                            <span>@local["Phone"]:</span> <a href="tel:+38 044 579 90 18">+38 044 579 90 18</a>
 
                         </p>
 
@@ -323,11 +338,11 @@
                         <div class="photo">
                             <img class="img-responsive" src="~/Content/img/sellers/6.jpg" alt="">
                         </div>
-                        <h5>Данилов Даниил <span>Менеджер</span> </h5>
+                        <h5>@local["SellerDanil"] <span>@local["Manager"]</span> </h5>
                         <p>
                             <span>E-Mail: </span><a href="mailto:d.danilov@braz.com.ua"></a>d.danilov@braz.com.ua <br>
-                            <span>Тел.:</span> <a href="tel:+38(067)327-53-24">+38(067)327-53-24</a><br>
-                            <span>Тел.:</span> <a href="tel:044 579 90 18">044 579 90 18</a>
+                            <span>@local["Phone"]:</span> <a href="tel:+38(067)327-53-24">+38(067)327-53-24</a><br>
+                            <span>@local["Phone"]:</span> <a href="tel:044 579 90 18">044 579 90 18</a>
                         </p>
 
                     </div>
@@ -344,7 +359,7 @@
 <section class="catalog_s" id="catalog_s">
     <div class="title_block">
         <h2>
-            Каталог
+            @catalog["Title"]
         </h2>
         <div class="line"></div>
     </div>
@@ -356,10 +371,10 @@
                     <img src="~/Content/img/catalog/1.jpg" alt="" class="img-responsive">
                     <div class="overlay">
                         <h5>
-                            Полоса 
+                            @catalog["SuperCatPolosa"] 
                             <div class="line"></div>
                         </h5>
-                        <a href="/catalog?cat=0" class="more">Подробнее <i class="fa fa-long-arrow-right"></i></a>
+                        <a href="/catalog/index/polosa" class="more">@local["Details"] <i class="fa fa-long-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -369,16 +384,16 @@
                     <img src="~/Content/img/catalog/2.jpg" alt="" class="img-responsive">
                     <div class="overlay">
                         <h5>
-                            Трубы
+                            @catalog["SuperCatPipes"] 
                             <div class="line"></div>
                         </h5>
                         <ul>
-                            <li><a href="/catalog?cat=17">Труба круглая</a></li>
-                            <li><a href="/catalog?cat=18">Труба квадратныя</a></li>
-                            <li><a href="/catalog?cat=19">Труба прямоугольная</a></li>
-                            <li><a href="/catalog?cat=20">Труба трехгранная</a></li>
-                            <li><a href="/catalog?cat=21">Труба овальная</a></li>
-                            <li><a href="/catalog?cat=22">Труба специальной формы</a></li>
+                            <li><a href="/catalog/index/truba_kruglaya">@catalog["CatRoundPipe"] </a></li>
+                            <li><a href="/catalog/index/truba_kvadratnaya">@catalog["CatSquarePipe"]</a></li>
+                            <li><a href="/catalog/index/truba_pryamougolnaya">@catalog["CatRectPipe"]</a></li>
+                            <li><a href="/catalog/index/truba_trexgrannaya">@catalog["Cat3EdgePipe"]</a></li>
+                            <li><a href="/catalog/index/truba_ovalnaya">@catalog["CatOvalPipe"]</a></li>
+                            <li><a href="/catalog/index/truba_specialnoj_formy">@catalog["CatSpecPipe"]</a></li>
                         </ul>
                         <a href="#" class="more"></a>
                     </div>
@@ -390,12 +405,12 @@
                     <img src="~/Content/img/catalog/3.jpg" alt="" class="img-responsive">
                     <div class="overlay">
                         <h5>
-                            Уголок
+                            @catalog["SuperCatCorners"]
                             <div class="line"></div>
                         </h5>
                         <ul>
-                            <li><a href="/catalog?cat=23">Уголок равносторонний</a></li>
-                            <li><a href="/catalog?cat=24">Уголок разносторонний</a></li>
+                            <li><a href="/catalog/index/ugolok_ravnostoronnij">@catalog["CatSameCorner"]</a></li>
+                            <li><a href="/catalog/index/ugolok_raznostoronnij">@catalog["CatDiffSize"]</a></li>
                         </ul>
                         <a href="#" class="more"></a>
                     </div>
@@ -407,13 +422,13 @@
                     <img src="~/Content/img/catalog/6.jpg" alt="">
                     <div class="overlay">
                         <h5>
-                            Пруток
+                            @catalog["SuperCatBars"]
                             <div class="line"></div>
                         </h5>
                         <ul>
-                            <li><a href="/catalog?cat=25">Пруток круглый</a></li>
-                            <li><a href="/catalog?cat=26">Пруток квадратный</a></li>
-                            <li><a href="/catalog?cat=27">Пруток шестигранный</a></li>
+                            <li><a href="/catalog/index/prutok_kruglyj">@catalog["CatRoundBar"]</a></li>
+                            <li><a href="/catalog/index/prutok_kvadratnyj">@catalog["CatSquareBar"]</a></li>
+                            <li><a href="/catalog/index/prutok_shestigrannyj">@catalog["Cat6EdgeBar"]</a></li>
                         </ul>
                         <a href="#" class="more"></a>
                     </div>
@@ -425,15 +440,15 @@
                     <img src="~/Content/img/catalog/4.jpg" alt="" class="img-responsive">
                     <div class="overlay">
                         <h5>
-                            Прочие профили
+                            @catalog["SuperCatOthers"]
                             <div class="line"></div>
                         </h5>
                         <ul>
-                            <li><a href="/catalog?cat=28">Швеллер</a></li>
-                            <li><a href="/catalog?cat=29">Тавр</a></li>
-                            <li><a href="/catalog?cat=30">Z-профиль</a></li>
-                            <li><a href="/catalog?cat=31">Двутавр</a></li>
-                            <li><a href="/catalog?cat=32">Отбортованный швеллер</a></li>
+                            <li><a href="/catalog/index/shveller">@catalog["CatShveller"]</a></li>
+                            <li><a href="/catalo/index/tavr">@catalog["CatTavr"]</a></li>
+                            <li><a href="/catalog/index/z-profil">@catalog["CatZProfile"]</a></li>
+                            <li><a href="/catalog/index/dvutavr">@catalog["CatDoubleTavr"]</a></li>
+                            <li><a href="/catalog/index/otbortovannyj_shveller">@catalog["CatBortedShveller"]</a></li>
                         </ul>
                         <a href="#" class="more"></a>
                     </div>
@@ -447,7 +462,7 @@
                     <div class="border"></div>
                     <div class="border"></div>
                     <a href="/Catalog" target="_blank">
-                        Смотреть каталог <i class="fa fa-long-arrow-right"></i>
+                        @local["CheckCatalog"] <i class="fa fa-long-arrow-right"></i>
                     </a>
                 </div>
             </div>
@@ -459,80 +474,24 @@
 <section class="prod_s" id="prod_s">
     <div class="title_block">
         <h2>
-            Производство
+            @local["Production"]
         </h2>
         <div class="line"></div>
     </div>
     <div class="factory_block">
-            <div class="item">
-                <a href="/pages/production?page=0"><div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
-Литейное производство</a>
-            </div>
-            <div class="item">
-                <a href="/pages/production?page=1">
-<div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>Экструзионное производство</a>
-            </div>
-            <div class="item">
-                <a href="/pages/production?page=2">
-<div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
-Цех анодного покрытия</a>
-            </div>
-            <div class="item">
-                <a href="/pages/production?page=3"><div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
-Цех полимерного покрытия</a>
-            </div>
 
- <div class="item">
-                <a href="/pages/production?page=4"><div class="line"></div>
+    @{ int j = 0;
+        }
+@foreach(string item in (List<string>)HttpContext.Current.Application["ProductionCategories"])
+{
+<div class="item">
+                <a href=@("/pages/production/"+item)><div class="line"></div>
                 <div class="line"></div>
                 <div class="line"></div>
                 <div class="line"></div>
-Цех механическй обработки</a>
+@(((Dictionary<string,Dictionary<int,Dictionary<string,string>>>)HttpContext.Current.Application["Localization"])[(string)Session["Lang"]][5]["Title-"+(j++).ToString()])</a>
             </div>
-
- <div class="item">
-                <a href="/pages/production?page=5"><div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
-Цех обработки поверхности</a>
-            </div>
-
- <div class="item">
-                <a href="/pages/production?page=6"><div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
-Инструментальный цех</a>
-            </div>
-
-            <div class="item">
-                
-                <a href="/pages/production?page=7"><div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
-Лабoратория</a>
-            </div>
-            <div class="item">
-                <a href="/pages/production?page=8"><div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
-Участок упаковки</a>
-            </div>
+}
     </div> 
 
 <!-- <div class="container-fluid">
@@ -611,7 +570,7 @@
         <div class="container">
             <div class="title_block">
                 <h2>
-                    Факты о нас
+                    @local["FactsAbout"]
                 </h2>
                 <div class="line"></div>
             </div>
@@ -622,7 +581,7 @@
                             <i class="fa fa-archive"></i>
                         </div>
                         <p>
-                            Ежеквартальная производительная мощность  <br> <span></span> тонн
+                            @Html.Raw(local["Powerful"])
                         </p>
                     </div>
                 </div>
@@ -634,7 +593,7 @@
                             <i class="fa fa-users"></i>
                         </div>
                         <p>
-                            Мы работаем с <br> <span></span> <br> странами мира.
+                            @Html.Raw(local["MuchCountries"])
                         </p>
                     </div>
                 </div>
@@ -645,7 +604,7 @@
                             <i class="fa fa-file-text-o"></i>
                         </div>
                         <p>
-                            В нашем ассортименте более <br><span></span> <br> видов алюминиевых профилей
+                            @Html.Raw(local["Assortiment"])
                         </p>
                     </div>
                 </div>
@@ -656,7 +615,7 @@
                             <i class="fa fa-clock-o"></i>
                         </div>
                         <p>
-                           Работаем<br><span></span><br>часа в сутки
+                           @Html.Raw(local["24chasa"])
                         </p>
                     </div>
                 </div>
@@ -671,7 +630,7 @@
 <section class="blog_s" id="blog_s">
     <div class="title_block">
         <h2>
-            Блог
+            @local["BlogTitle"]
         </h2>
         <div class="line"></div>
     </div>
@@ -680,29 +639,51 @@
         {
             <div class="blog_item" style="background-image: url('../../Content/img/news/newsmore/@(list[i].Id.ToString()).index.jpg'); background-size: cover;" aos="zoom-out-left">
                 <div class="cont_block">
-                    <h4>@list[i].Header</h4>
-                    @{ 
-                System.Globalization.CultureInfo cult = new System.Globalization.CultureInfo("ru-RU");
-            }
-            <p>@list[i].Date.ToString("d MMM yyyy",cult)</p>
+                    <h4>@post["Header-"+list[i].Id.ToString()]</h4>
+            <p>@list[i].Date.ToString("d MMM yyyy", System.Threading.Thread.CurrentThread.CurrentCulture)</p>
                     <div class="line"></div>
                     <p>
-                        @Html.Raw(list[i].Text.Substring(0, System.Math.Min(list[i].Text.Length, 150)) + "...")
+                        @Html.Raw(post["Text-"+list[i].Id.ToString()].Substring(0, System.Math.Min(post["Text-"+list[i].Id.ToString()].Length, 150)) + "...")
                     </p>
-                    <div class="border"></div>
                 </div>
                 <div class="more_block">
                     <!--<p><i class="fa fa-heart"></i> <span>30</span> likes</p>-->
                     <br><br><br><br><br><br>
-                    <a href="/blog/news?post=@(list[i].Id.ToString())">Подробнее</a>
+                    <a href="/blog/news?post=@(list[i].Id.ToString())">@local["Details"]</a>
                     <div class="border"></div>
                 </div>
             </div>
         }
     </div>
 </section>
+<!-- Код тега ремаркетинга Google -->
+<!--------------------------------------------------
+С помощью тега ремаркетинга запрещается собирать информацию, по которой можно идентифицировать личность пользователя. Также запрещается размещать тег на страницах с контентом деликатного характера. Подробнее об этих требованиях и о настройке тега читайте на странице http://google.com/ads/remarketingsetup.
+--------------------------------------------------->
+<script type="text/javascript">
+/* <![CDATA[ */
+var google_conversion_id = 932475633;
+var google_custom_params = window.google_tag_params;
+var google_remarketing_only = true;
+/* ]]> */
+</script>
+<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+</script>
+<noscript>
+<div style="display:inline;">
+<img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/932475633/?value=0&guid=ON&script=0"/>
+</div>
+</noscript>
 
-
+<!-- Google Tag Manager -->
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-TKRZ6W"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TKRZ6W');</script>
+<!-- End Google Tag Manager -->
 
 
 <section class="contact_s" id="contact_s">
@@ -710,27 +691,27 @@
 
         <div class="title_block">
             <h2>
-                Форма обратной связи
+                @local["FeedbackForm"]
             </h2>
             <div class="line"></div>
         </div>
         <div class="row">
             <div class="col-md-5 col-md-offset-1">
                 <div class="form_block">
-<b>В случае, если у вас возникли пожелания или замечания по поводу деятельности нашей компании, вы можете обратиться непосредственно к учредителю группы компаний Алюмета</b>  <br><br>
+<b>@local["InCase"]</b>  <br><br>
                     @using (Ajax.BeginForm("SendFeedback", "Pages", new AjaxOptions() { HttpMethod="POST", UpdateTargetId="feedbackform" }, new { @id="feedbackform" }))
                     {
-                        <input name="name" type="text" placeholder="Ваше имя" required aos="fade-right">
-                        <input name ="phone" type="text" placeholder="Ваш телефон" aos="fade-right">
-                        <input name ="email" type="email" placeholder="Ваш E-Mail" required aos="fade-right">
-                        <textarea name="message" placeholder="Ваше сообщение" aos="fade-right"></textarea>
+                        <input name="name" type="text" placeholder="@local["RegPHName"]" required aos="fade-right">
+                        <input name ="phone" type="text" placeholder="@local["RegPHPhone"]" aos="fade-right">
+                        <input name ="email" type="email" placeholder="@local["RegPHEmail"]" required aos="fade-right">
+                        <textarea name="message" placeholder="@local["FeedbackPHText"]" aos="fade-right"></textarea>
 
-                        <input type="submit" value="Отправить" aos="fade-right">
+                        <input type="submit" value="@local["Send"]" aos="fade-right">
                     }
 <div class="group">
                         <p>+38 (044) 579-90-51</p>
                         <p>+38 (044) 579-90-45</p>
-                        <p>7400, Украина, Киевская область, г. Бровары, бульвар Независимости, 30</p>
+                        <p>@local["Address"]</p>
                     </div>
                     
                 </div>
@@ -755,98 +736,6 @@
         </div>
     </section>*@
 
-<footer>
-    <div class="soc_block">
-        <div class="item">
-            <a href="https://www.facebook.com/braz.industries/" target="_blank">
-                <i class="fa fa-facebook"></i>
-            </a>
-        </div>
-        <div class="item">
-            <a href="">
-                <i class="fa fa-twitter"></i>
-            </a>
-        </div>
-        <div class="item">
-            <a href="">
-                <i class="fa fa-linkedin"></i>
-            </a>
-        </div>
-        <div class="item">
-            <a href="https://plus.google.com/108630417052860007244" target="_blank">
-                <i class="fa fa-google-plus"></i>
-            </a>
-        </div>
-        <div class="item">
-            <a href="https://www.youtube.com/channel/UC1T9si7nLVStmCxWFce942Q" target="_blank">
-                <i class="fa fa-youtube"></i>
-            </a>
-        </div>
-    </div>
-
-    <div class="sitemap_block">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-2">
-                    <img src="~/Content/img/logo.png" alt="" class="img-responsive">
-                </div>
-                <div class="col-md-9">
-                    <ul class="map_list">
-                        <li>
-                            @Html.ActionLink("О нас", "Story", "Pages")
-                            <ul>
-                                <li>@Html.ActionLink("История", "Story", "Pages")</li>
-                                <li>@Html.ActionLink("Группа компаний", "Group", "Pages", new { Section = "BrazConstruction" }, new { })</li>
-                                <li>@Html.ActionLink("Статистика", "Statistics", "Pages")</li>
-                            </ul>
-                        </li>
-                        <li>
-                            @Html.ActionLink("Каталог", "Index", "Catalog")
-                            <ul class="dd_menu">
-                                <li>@Html.ActionLink("Полоса", "Index", "Catalog", new { cat = 0 }, new { })</li>
-                                <li>@Html.ActionLink("Трубы АЛЮМИНИЕВЫЕ", "Index", "Catalog", new { cat = 17 }, new { })</li>
-                                <li>@Html.ActionLink("Уголок", "Index", "Catalog", new { cat = 23 }, new { })</li>
-                                <li>@Html.ActionLink("Пруток", "Index", "Catalog", new { cat = 25 }, new { })</li>
-                                <li>@Html.ActionLink("Прочие профили", "Index", "Catalog", new { cat = 28 }, new { })</li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="/pages/production?page=0">Наше производство</a>
-                            <ul class="dd_menu">
-                                <li>@Html.ActionLink("Литейное производство", "Production", "Pages", new { page = 0 }, new { })</li>
-                                <li>@Html.ActionLink("Экструзионное производство", "Production", "Pages", new { page = 1 }, new { })</li>
-                                <li>@Html.ActionLink("Цех гальванического покрытия", "Production", "Pages", new { page = 2 }, new { })</li>
-                                <li>@Html.ActionLink("Цех полимерного покрытия", "Production", "Pages", new { page = 3 }, new { })</li>
-                                <li>@Html.ActionLink("Лаборатория", "Production", "Pages", new { page = 4 }, new { })</li>
-                                <li>@Html.ActionLink("Участок упаковки", "Production", "Pages", new { page = 5 }, new { })</li>
-                                <li>@Html.ActionLink("Услуги", "Services", "Pages")</li>
-                            </ul>
-                        </li>
-                        <li>
-                            @Html.ActionLink("Пресс центр", "Index", "Blog")
-                            <ul class="dd_menu">
-                                <li>@Html.ActionLink("Новости", "Index", "Blog")</li>
-                                <li>@Html.ActionLink("Часто задаваемые вопросы", "Questions", "Pages")</li>
-                            </ul>
-                        </li>
-                        <li>@Html.ActionLink("Контакты", "Contacts", "Pages")</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="copyright">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4 col-md-offset-4">
-                    Сopyright©2016
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
-
 
 <div id="page-preloader"><span class="spinner"></span></div>
 
@@ -854,7 +743,7 @@
 {
    <div class="up_btn_area">
     <a class="up_btn" href="#header">
-        <span><i class="fa fa-chevron-up"></i> Вверх</span>
+        <span><i class="fa fa-chevron-up"></i>@local["MoveUp"]</span>
     </a>
 </div>
     <!-- <a class="cat_btn" href="/catalog">

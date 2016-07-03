@@ -1,4 +1,7 @@
-﻿<div id="buymodal">
+﻿@{ 
+    var local = (Dictionary<string, string>)ViewData["Local"];
+}
+<div id="buymodal">
     <div class="modal fade" id="BuyItemModal" tabindex="-1" role="dialog" aria-labelledby="buyModalLabel">
         <div class="modal-dialog buyModal" role="document">
                 @using (Html.BeginForm("BuyProduct", "Catalog", new { catid= ((Braz.Models.Item)ViewData["CatId"]).Category.Id, itemid = ViewData["ItemId"] }, FormMethod.Post, new { @id = "buy_form" }))
@@ -8,96 +11,96 @@
                     {
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="buyModalLabel">Выберите характеристики</h4>
+                            <h4 class="modal-title" id="buyModalLabel">@local["BuyChoose"]</h4>
                         </div>
                         <div class="modal-body">
                             <div class="inp_cont">
-                                <p>Марка сплава: </p>
-                                <label><input data-openSet="termo_cont"  type="radio" name="mark" value="АД31" id="mark1">АД31</label>
-                                <label><input data-openSet=""            type="radio" name="mark" value="АД0 Без ТО" id="mark2">АД0 Без ТО</label>
-                                <label><input data-openSet="termo_cont2" type="radio" name="mark" value="6060 экспорт" id="mark3">6060 экспорт</label>
-                                <label><input data-openSet="termo_cont2" type="radio" name="mark" value="6063 экспорт" id="mark3">6063 экспорт</label>
-                                <label><input data-openSet="termo_cont2" type="radio" name="mark" value="6005 экспорт" id="mark3">6005 экспорт</label>
+                                <p>@local["BuyMark"] </p>
+                                <label><input data-openSet="termo_cont"  type="radio" name="mark" value="АД31" id="mark1">@local["BuyMark1"]</label>
+                                <label><input data-openSet=""            type="radio" name="mark" value="АД0 Без ТО" id="mark2">@local["BuyMark2"]</label>
+                                <label><input data-openSet="termo_cont2" type="radio" name="mark" value="6060 экспорт" id="mark3">@local["BuyMark3"]</label>
+                                <label><input data-openSet="termo_cont2" type="radio" name="mark" value="6063 экспорт" id="mark3">@local["BuyMark4"]</label>
+                                <label><input data-openSet="termo_cont2" type="radio" name="mark" value="6005 экспорт" id="mark3">@local["BuyMark5"]</label>
                             </div>
                             <div class="inp_cont hidden changeFrom1" id="termo_cont">
-                                <p>Термообработка </p>
+                                <p>@local["BuyTerm"] </p>
                                 <label><input type="radio" name="termo1" value="Т1" id="termo1_1">Т1</label>
                                 <label><input type="radio" name="termo1" value="Т5" id="termo1_2">Т5</label>
-                                <label><input type="radio" name="termo1" value="Т1 усиленная" id="termo1_3">Т1 усиленная</label>
+                                <label><input type="radio" name="termo1" value="Т1 усиленная" id="termo1_3">@local["BuyTerm1"]</label>
                             </div>
                             <div class="inp_cont hidden changeFrom1" id="termo_cont2">
-                                <p>Термообработка </p>
+                                <p>@local["BuyTerm"] </p>
                                 <label><input type="radio" name="termo2" value="Т64" id="termo1_1">Т64</label>
                                 <label><input type="radio" name="termo2" value="Т6" id="termo1_2">Т6</label>
-                                <label><input type="radio" name="termo2" value="Т66 усиленная" id="termo1_3">Т66 усиленная</label>
+                                <label><input type="radio" name="termo2" value="Т66 усиленная" id="termo1_3">@local["BuyTerm1"]</label>
                             </div>
 
                             <div class="inp_cont" id="termo_cont2">
-                                <p>Длина, мм</p>
+                                <p>@local["BuyLen"]</p>
                                 <input type="number" name="length" id="length">
                             </div>
 
                             <div class="inp_cont hidden changeFrom2" id="accLength">
-                                <p>Допускается отклонение на +/- 2 мм </p>
-                                <label><input type="radio" name="accLength" value="yes" id="lengthYes">Да</label>
-                                <label><input type="radio" name="accLength" value="no" id="lengthNo">Нет</label>
+                                <p>@local["BuyAllow"] </p>
+                                <label><input type="radio" name="accLength" value="yes" id="lengthYes">@local["BuyYes"]</label>
+                                <label><input type="radio" name="accLength" value="no" id="lengthNo">@local["BuyNo"]</label>
                             </div>
                             <div class="inp_cont" id="cover">
-                                <p>Декоративно-защитное покрытие</p>
-                                <label><input data-openSetCover="anodSets" type="radio" name="cover" value="Анодирование" id="anodCover">Анодирование</label>
-                                <label><input data-openSetCover="paintSets" type="radio" name="cover" value="Покраска" id="colorCover">Покраска</label>
-                                <label><input type="radio" name="cover" value="Декорирование" id="decorCover">Декорирование</label>
+                                <p>@local["BuyDecor"]</p>
+                                <label><input data-openSetCover="anodSets" type="radio" name="cover" value="Анодирование" id="anodCover">@local["BuyAnod"]</label>
+                                <label><input data-openSetCover="paintSets" type="radio" name="cover" value="Покраска" id="colorCover">@local["BuyCraska"]</label>
+                                <label><input type="radio" name="cover" value="Декорирование" id="decorCover">@local["BuyDecor1"]</label>
                             </div>
                             <div class="inp_cont hidden changeFrom3" id="anodSets">
-                                <p>Толщина, цвет</p>
-                                <label><input type="radio" name="chooseWeight" value="Б/Ц 6 мкм" id="bc6">Б/Ц 6 мкм</label>
-                                <label><input type="radio" name="chooseWeight" value="Б/Ц 15 мкм" id="bc15">Б/Ц 15 мкм</label>
-                                <label><input type="radio" name="chooseWeight" value="Б/Ц 21 мкм" id="bc21">Б/Ц 21 мкм</label> <br>
+                                <p>@local["BuyWid"]</p>
+                                <label><input type="radio" name="chooseWeight" value="Б/Ц 6 мкм" id="bc6">@local["BuyWid1"]</label>
+                                <label><input type="radio" name="chooseWeight" value="Б/Ц 15 мкм" id="bc15">@local["BuyWid2"]</label>
+                                <label><input type="radio" name="chooseWeight" value="Б/Ц 21 мкм" id="bc21">@local["BuyWid3"]</label> <br>
 
-                                <label><input type="radio" name="chooseColor" value="Черный" id="black">Черный</label>
-                                <label><input type="radio" name="chooseColor" value="Золото" id="gold">Золото</label>
-                                <label><input type="radio" name="chooseColor" value="Бронза" id="bronze">Бронза</label>
-                                <label><input type="radio" name="chooseColor" value="Светлая бронза" id="lightBronze">Светлая бронза</label>
-                                <label><input type="radio" name="chooseColor" value="Темная бронза" id="darkBronze">Темная бронза</label>
+                                <label><input type="radio" name="chooseColor" value="Черный" id="black">@local["BuyBlack"]</label>
+                                <label><input type="radio" name="chooseColor" value="Золото" id="gold">@local["BuyGold"]</label>
+                                <label><input type="radio" name="chooseColor" value="Бронза" id="bronze">@local["BuyBronze"]</label>
+                                <label><input type="radio" name="chooseColor" value="Светлая бронза" id="lightBronze">@local["BuyLight"]</label>
+                                <label><input type="radio" name="chooseColor" value="Темная бронза" id="darkBronze">@local["BuyDark"]</label>
 
-                                <p>Допускаются ли контактные пятна на изделии</p>
-                                <label><input type="radio" name="anodBorders" value="yes" id="anodBordersYes">Да</label>
-                                <label><input type="radio" name="anodBorders" value="no" id="anodBordersNo">Нет</label>
+                                <p>@local["BuyAllowPyat"]</p>
+                                <label><input type="radio" name="anodBorders" value="yes" id="anodBordersYes">@local["BuyYes"]</label>
+                                <label><input type="radio" name="anodBorders" value="no" id="anodBordersNo">@local["BuyNo"]</label>
                             </div>
 
                             <div class="inp_cont hidden changeFrom3" id="paintSets">
-                                <p>Цвет по каталогу RAL</p>
+                                <p>@local["BuyRAL"]</p>
                                 <input type="text" placeholder="Введите цвет" name="color">
 
-                                <p>Тип краски</p>
-                                <label><input type="radio" name="paintType" value="Для наружнего применения" id="outUsePaint">Для наружнего применения</label>
-                                <label><input type="radio" name="paintType" value="Для внутреннего применения" id="inUsePaint">Для внутреннего применения</label>
+                                <p>@local["BuyColType"]</p>
+                                <label><input type="radio" name="paintType" value="Для наружнего применения" id="outUsePaint">@local["BuyOut"]</label>
+                                <label><input type="radio" name="paintType" value="Для внутреннего применения" id="inUsePaint">@local["BuyIn"]</label>
 
-                                <p>Степень блеска</p>
-                                <label><input type="radio" name="shineType" value="Глянец" id="glShine">Глянец</label>
-                                <label><input type="radio" name="shineType" value="Матовое" id="mtShine">Матовое</label>
-                                <label><input type="radio" name="shineType" value="Полуматовое" id="pmShine">Полуматовое</label>
+                                <p>@local["BuyStep"]</p>
+                                <label><input type="radio" name="shineType" value="Глянец" id="glShine">@local["BuyGl"]</label>
+                                <label><input type="radio" name="shineType" value="Матовое" id="mtShine">@local["BuyMat"]</label>
+                                <label><input type="radio" name="shineType" value="Полуматовое" id="pmShine">@local["BuyPoluMat"]</label>
                             </div>
 
                             <div class="inp_cont" id="mechanicWork">
-                                <p>Дополнительная механическая обработка</p>
-                                <label><input type="radio" name="mechanicWork" value="yes" id="mechanicWorkYes">Да</label>
-                                <label><input type="radio" name="mechanicWork" value="no" id="mechanicWorkNo">Нет</label>
+                                <p>@local["BuyAdditional"]</p>
+                                <label><input type="radio" name="mechanicWork" value="yes" id="mechanicWorkYes">@local["BuyYes"]</label>
+                                <label><input type="radio" name="mechanicWork" value="no" id="mechanicWorkNo">@local["BuyNo"]</label>
                             </div>
 
                             <div class="inp_cont" id="commentary">
-                                <p>Комментарий</p>
+                                <p>@local["BuyComment"]</p>
                                 <textarea name="commentary" id="commentary" rows="10"></textarea>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Закрыть</button>
-                            <button type="submit" class="btn btn-success" >Отправить</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">@local["BuyClose"]</button>
+                            <button type="submit" class="btn btn-success" >@local["BuySend"]</button>
                         </div>
                     }
                     else
                     {
-                        <p> Для покупки товара нужно зарегистрироватся/войти.</p>
+                        <p> @local["BuyReg"]</p>
                     }
                 </div>
             }

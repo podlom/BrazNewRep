@@ -3,6 +3,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
+using System.Linq;
 
 
 namespace Braz
@@ -19,12 +20,17 @@ namespace Braz
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
 
-            RegisterGlobalVariables();
+            PreRegisterGlobalVariables();
             ReadGlobalSetting();
             ReadLocalization();
+            PostRegisterGlobalVariables();
         }
         protected void Session_Start()
         {
+            //Crawler protect
+            List<string> ips = new List<string>() { "66.249.79.145" };
+            if (ips.Contains(Request.UserHostAddress))
+                Session.Timeout = 1;
             //Increment session counter
             Application["ActiveSessionCount"] = ((int)Application["ActiveSessionCount"]) + 1;
 
@@ -32,6 +38,7 @@ namespace Braz
             if ((Request.Cookies["lang"] == null)||(Request.Cookies["lang"].Value==null))
             {
                 Session["lang"] = "Русский";
+                System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("ru-RU");
                 Response.Cookies.Add(new HttpCookie("lang", "Русский"));
             }
             else
@@ -39,10 +46,13 @@ namespace Braz
                 if (((List<string>)Application["Languages"]).Contains(Request.Cookies["lang"].Value))
                 {
                     Session["lang"] = Request.Cookies["lang"].Value;
+                    if (Request.QueryString["Lang"] == "English") System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+                    else System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("ru-RU");
                 }
                 else
                 {
                     Session["lang"] = "Русский";
+                    System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("ru-RU");
                 }
             }
             //Login cookies
@@ -81,7 +91,7 @@ namespace Braz
             Application["ActiveSessionCount"] = ((int)Application["ActiveSessionCount"]) - 1;
         }
 
-        void RegisterGlobalVariables()
+        void PreRegisterGlobalVariables()
         {
             //Log file
             Application["LogFile"] = Server.MapPath("~/log.txt");
@@ -95,39 +105,17 @@ namespace Braz
             //Set Admin
             Application["Admin"] = new Models.User(true);
 
-            //Catalog Categories
-            Application["ParentCategories"] = new List<string>() {
-                "Полоса", //0
-                "Трубы алюминиевые", //1
-                "Уголок", //2
-                "Пруток", //3
-                "Прочие профили", //4
-                "Профиль электротехнический", //5
-                "Профиль для декоративных работ", //6
-                "Профиль для светопрозрачных конструкций", //7
-                "Строительный профиль", //8
-                "Профиль для натяжных потолков", //9
-                "Специализированные профили", //10
-                "Мебельный профиль", //11
-                "Торгово-выставочные системы", //11
-                "Решетки алюминиевые", //12
-                "Профиль для конструкций теплиц", //13
-                "Профили для рекламных конструкций", //14
-                "Отлив алюминиевый", //15
-                "Соединительные профили" //16
-            };
-
-            Application["ProductionCategories"] = new Dictionary<string, string>()
+            Application["ProductionCategories"] = new List<string>()
             {
-                { "litejnoe_proizvodstvo","Литейное производство" },
-                { "ekstruzionnoe_proizvodstvo", "Экструзионное производство" },
-                { "cex_anodnogo_pokrytiya", "Цех анодного покрытия" },
-                { "cex_polimernogo_pokrytiya","Цех полимерного покрытия" },
-                { "cex_mexanicheskoj_obrabotki","Цех механической обработки" },
-                { "cex_obrabotki_poverxnosti","Цех обработки поверхности" },
-                { "instrumentalnyj_cex","Инструментальный цех" },
-                { "laboratoriya","Лаборатория" },
-                { "uchastok_upakovki","Участок упаковки" }
+                { "litejnoe_proizvodstvo" },
+                { "ekstruzionnoe_proizvodstvo"},
+                { "cex_anodnogo_pokrytiya"},
+                { "cex_polimernogo_pokrytiya"},
+                { "cex_mexanicheskoj_obrabotki" },
+                { "cex_obrabotki_poverxnosti" },
+                { "instrumentalnyj_cex" },
+                { "laboratoriya"},
+                { "uchastok_upakovki" }
             };
         }
         void ReadGlobalSetting()
@@ -145,6 +133,24 @@ namespace Braz
             {
                 Application["Localization"] = db.ReadLocalization(query);
             }
+        }
+        void PostRegisterGlobalVariables()
+        {
+            //Catalog Categories
+            Dictionary<string, List<string>> result = new Dictionary<string, List<string>>();
+            foreach(KeyValuePair<string,Dictionary<int,Dictionary<string,string>>> pair in (Dictionary<string, Dictionary<int, Dictionary<string, string>>>)Application["Localization"])
+            {
+                List<string> tlist = new List<string>();
+                foreach(KeyValuePair<int,Dictionary<string,string>> pair2 in pair.Value.Where(x=>x.Key==4))
+                {
+                    foreach (KeyValuePair<string, string> pair3 in pair2.Value.Where(x => x.Key.Substring(0, System.Math.Min(8,x.Key.Length)) == "SuperCat"))
+                    {
+                        tlist.Add(pair3.Value);
+                    }
+                }
+                result.Add(pair.Key, tlist);
+            }
+            Application["ParentCategories"] = result;
         }
     }
 

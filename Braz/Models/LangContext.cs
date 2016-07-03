@@ -70,7 +70,7 @@ namespace Braz.Models
             while(reader.Read())
             {
                 SubCategory temp = new SubCategory((int)reader["Id"]);
-                temp.Name = (string)reader["Name"];
+                temp.Name = (string)reader[(string)System.Web.HttpContext.Current.Session["Lang"]];
                 temp.Parent = new Category((int)reader["catid"]);
                 //temp.Url = (string)reader["Url"];
                 result.Add(temp);
@@ -89,7 +89,7 @@ namespace Braz.Models
             while(reader.Read())
             {
                 result = new SubCategory((int)reader["Id"]);
-                result.Name = (string)reader["Name"];
+                result.Name = (string)reader[(string)System.Web.HttpContext.Current.Session["Lang"]];
                 result.Parent = new Category((int)reader["catid"]);
                 //result.Url = (string)reader["Url"];
                 TParams = (string)reader["ParamSet"];
@@ -109,7 +109,7 @@ namespace Braz.Models
             while(reader.Read())
             {
                 result = new Item((int)reader["ItemID"]);
-                result.Category = new SubCategory((int)reader["CategoryID"]) { Name = (string)reader["Name"], Parent = new Category((int)reader["catid"]) };
+                result.Category = new SubCategory((int)reader["CategoryID"]) { Name = (string)reader[(string)System.Web.HttpContext.Current.Session["Lang"]], Parent = new Category((int)reader["catid"]) };
                 TSet = new ItemDataSet { Id = result.Id, ParamSet = (string)reader["ParamSet"], DataSet = (string)reader["DataSet"] };
             }
             reader.Close();
@@ -131,7 +131,7 @@ namespace Braz.Models
             while (reader.Read())
             {
                 Item temp = new Item((int)reader["ItemID"]);
-                temp.Category = new SubCategory((int)reader["CategoryID"]) { Name = (string)reader["Name"], Parent = new Category((int)reader["catid"]) };
+                temp.Category = new SubCategory((int)reader["CategoryID"]) { Name = (string)reader[(string)System.Web.HttpContext.Current.Session["Lang"]], Parent = new Category((int)reader["catid"]) };
                 result.Add(temp, new ItemDataSet() { Id=temp.Id, ParamSet = (string)reader["ParamSet"], DataSet = (string)reader["DataSet"]});
             }
             reader.Close();
@@ -170,7 +170,7 @@ namespace Braz.Models
             if (list.Length == 0)
                 return result;
 
-            string query = "SELECT filters.Id, filters.Max,filters.Step,filters.Description,parameter_list.Id AS Parameter, parameter_list.Name, parameter_list.Measure, parameter_list.Description FROM filters INNER JOIN parameter_list ON filters.Parameter=parameter_list.Id WHERE filters.Id=";
+            string query = "SELECT filters.Id, filters.Max,filters.Step,localization."+(string)System.Web.HttpContext.Current.Session["Lang"]+",parameter_list.Id AS Parameter, parameter_list.Name, parameter_list.Measure, parameter_list.Description FROM filters INNER JOIN parameter_list ON filters.Parameter=parameter_list.Id LEFT JOIN localization ON filters.Description=localization.Id WHERE filters.Id=";
             foreach(string item in list.Split('|'))
             {
                 query += item + " OR filters.Id=";
@@ -189,7 +189,7 @@ namespace Braz.Models
             while(reader.Read())
             {
                 Filter temp = new Filter() { Id = (int)reader["Id"], Max = (double)reader["Max"], Step = (double)reader["Step"] };
-                temp.Parameter = new Parameter() { Id = (int)reader["Parameter"], Key = (string)reader["Name"], Value = (string)reader["Measure"], Description = (string)reader["Description"] };
+                temp.Parameter = new Parameter() { Id = (int)reader["Parameter"], Key = (string)reader["Name"], Value = (string)reader["Measure"], Description = (string)reader[(string)System.Web.HttpContext.Current.Session["Lang"]] };
                 result.Add(temp);
             }
 
@@ -204,14 +204,14 @@ namespace Braz.Models
             if (input.Length == 0)
                 return result;
             //Provide query
-            string query = "SELECT * FROM parameter_list WHERE Id=";
+            string query = "SELECT parameter_list.Id, parameter_list.Name,parameter_list.Measure,localization."+(string)System.Web.HttpContext.Current.Session["Lang"]+ " FROM parameter_list INNER JOIN localization ON parameter_list.Description=localization.Id WHERE parameter_list.Id=";
             foreach (string item in input.Split('|'))
             {
-                query += item + " OR Id=";
+                query += item + " OR parameter_list.Id=";
             }
-            query = query.Remove(query.Length - 7);
+            query = query.Remove(query.Length - (" OR parameter_list.Id=").Length);
 
-            query += " GROUP BY FIELD(Id,";
+            query += " GROUP BY FIELD(parameter_list.Id,";
             foreach(string item in input.Split('|'))
             {
                 query += item + ", ";
@@ -222,7 +222,7 @@ namespace Braz.Models
             MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader();
             while (reader.Read())
             {
-                Parameter temp = new Parameter() { Id = (int)reader["Id"], Key = (string)reader["Name"], Value = (string)reader["Measure"], Description = (string)reader["Description"] };
+                Parameter temp = new Parameter() { Id = (int)reader["Id"], Key = (string)reader["Name"], Value = (string)reader["Measure"], Description = (string)reader[(string)System.Web.HttpContext.Current.Session["Lang"]] };
                 result.Add(temp);
             }
 
@@ -240,11 +240,11 @@ namespace Braz.Models
                 return result;
 
             //get all available parameters
-            string query = "SELECT * FROM parameter_list";
+            string query = "SELECT parameter_list.Id, parameter_list.Name,parameter_list.Measure, localization." + (string)System.Web.HttpContext.Current.Session["Lang"] + " FROM parameter_list LEFT JOIN localization ON parameter_list.Description=localization.Id";
             MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader();
             while(reader.Read())
             {
-                AvailableParams.Add(new Parameter() { Id = (int)reader["Id"], Key = (string)reader["Name"], Value = (string)reader["Measure"], Description = (string)reader["Description"] });
+                AvailableParams.Add(new Parameter() { Id = (int)reader["Id"], Key = (string)reader["Name"], Value = (string)reader["Measure"], Description = (string)reader[(string)System.Web.HttpContext.Current.Session["Lang"]] });
             }
             reader.Close();
 
@@ -283,7 +283,7 @@ namespace Braz.Models
             MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader();
             while (reader.Read())
             {
-                SubCategory temp = new SubCategory((int)reader["Id"]) { Name = (string)reader["Name"] };
+                SubCategory temp = new SubCategory((int)reader["Id"]) { Name = (string)reader[(string)System.Web.HttpContext.Current.Session["Lang"]] };
                 result.Add(temp);
             }
             return result;

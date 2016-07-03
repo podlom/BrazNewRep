@@ -25,6 +25,7 @@ namespace Braz.Controllers
         [AdminFilter]
         public ActionResult Posts()
         {
+            ViewData["Local"] = ((Dictionary<string, Dictionary<int, Dictionary<string, string>>>)HttpContext.Application["Localization"]);
             ViewData["PostList"] = Models.Post.GetPosts();
             return View();
         }
@@ -66,7 +67,14 @@ namespace Braz.Controllers
             FileList.Add(Request.Files["index_image"]);
             FileList.Add(Request.Files["list_image"]);
             FileList.Add(Request.Files["post_image"]);
-            int id = Models.Post.Add(data["title"], data["text"], System.DateTime.Now, FileList);
+            Dictionary<string, string> titles = new Dictionary<string, string>();
+            Dictionary<string, string> texts = new Dictionary<string, string>();
+            foreach (string lang in (List<string>)HttpContext.Application["Languages"])
+            {
+                titles.Add(lang, data[lang + "-title"]);
+                texts.Add(lang, data[lang + "-text"]);
+            }
+            int id = Models.Post.Add(titles, texts, System.DateTime.Now, FileList);
             return Redirect("/Admin/Posts");
         }
         [AdminFilter]
@@ -77,13 +85,18 @@ namespace Braz.Controllers
             System.DateTime OldDate = System.DateTime.Parse(Request.QueryString["olddate"]);
             if (OldDate == NewDate)
                 NewDate = null;
-            string title = data["title"];
-            string text = data["text"];
+            Dictionary<string, string> titles = new Dictionary<string, string>();
+            Dictionary<string, string> texts = new Dictionary<string, string>();
+            foreach (string lang in (List<string>)HttpContext.Application["Languages"])
+            {
+                titles.Add(lang, data[lang + "-title"]);
+                texts.Add(lang, data[lang + "-text"]);
+            }
             System.Collections.Generic.List<System.Web.HttpPostedFileBase> FileList = new System.Collections.Generic.List<System.Web.HttpPostedFileBase>();
             FileList.Add(Request.Files["index_image"]);
             FileList.Add(Request.Files["list_image"]);
             FileList.Add(Request.Files["post_image"]);
-            Models.Post.Update(int.Parse(Request.QueryString["post"]), title, text.Replace("\n", "<br>").Replace("'", "[0]"), FileList, NewDate);
+            Models.Post.Update(int.Parse(Request.QueryString["post"]), titles, texts, FileList, NewDate);
             return Redirect("/admin/posts");
         }
         [AdminFilter]
@@ -96,45 +109,63 @@ namespace Braz.Controllers
         [AdminFilter]
         public ActionResult Vacancies()
         {
+            ViewData["Local"] = ((Dictionary<string, Dictionary<int, Dictionary<string, string>>>)HttpContext.Application["Localization"]);
             return View(Models.Vacancy.GetVacancies());
         }
         [AdminFilter]
         public ActionResult AddVacancy(FormCollection data)
         {
-            List<string> require = new List<string>();
-            List<string> duty = new List<string>();
+            Dictionary<string,List<string>> require = new Dictionary<string, List<string>>();
+            Dictionary<string, List<string>> duty = new Dictionary<string, List<string>>();
+            Dictionary<string, string> header = new Dictionary<string, string>();
+            Dictionary<string, string> descr = new Dictionary<string, string>();
             int req = int.Parse(Request.QueryString["req"]);
             int dut = int.Parse(Request.QueryString["dut"]);
-            string header = data["header"];
-            string descr = data["descr"];
+            foreach(string lang in (List<string>)HttpContext.Application["Languages"])
+            {
+                header.Add(lang,data[lang+"-header"]);
+                descr.Add(lang,data[lang+"-descr"]);
+                List<string> temp = new List<string>();
+                for (int i = 0; i < req; i++)
+                    temp.Add(data[lang+"-req" + i.ToString()]);
+                require.Add(lang, temp);
+                temp = new List<string>();
+                for (int i = 0; i < dut; i++)
+                    temp.Add(data[lang+"-dut" + i.ToString()]);
+                duty.Add(lang, temp);
+            }
             string url = data["url"];
             string salary = data["salary"];
             int type = data["type"] == "Офис" ? 0 : 1;
-            for(int i=0;i<req;i++)
-                require.Add(data["req" + i.ToString()]);
-            for (int i = 0; i < dut; i++)
-                duty.Add(data["dut" + i.ToString()]);
             Braz.Models.Vacancy.Create(header, descr, salary, require, duty, url, type);
             return Redirect("/Admin/Vacancies");
         }
         [AdminFilter]
         public ActionResult UpdateVacancy(FormCollection data)
         {
-            string header = data["header"];
-            string descr = data["descr"];
+            Dictionary<string, List<string>> require = new Dictionary<string, List<string>>();
+            Dictionary<string, List<string>> duty = new Dictionary<string, List<string>>();
+            Dictionary<string, string> header = new Dictionary<string, string>();
+            Dictionary<string, string> descr = new Dictionary<string, string>();
             string url = data["url"];
             string salary = data["salary"];
             int type = data["type"] == "Офис" ? 0 : 1;
-
-            List<string> require = new List<string>();
-            List<string> duty = new List<string>();
             int id = int.Parse(Request.QueryString["vac"]);
             int req = int.Parse(Request.QueryString["req"]);
             int dut = int.Parse(Request.QueryString["dut"]);
-            for (int i = 0; i < req; i++)
-                require.Add(data["req" + i.ToString()]);
-            for (int i = 0; i < dut; i++)
-                duty.Add(data["dut" + i.ToString()]);
+            foreach(string lang in (List<string>)HttpContext.Application["Languages"])
+            {
+                header.Add(lang, data[lang + "-header"]);
+                descr.Add(lang, data[lang + "-descr"]);
+                List<string> result = new List<string>();
+                for (int i = 0; i < req; i++)
+                    result.Add(data[lang+"-req" + i.ToString()]);
+                require.Add(lang, result);
+                result = new List<string>();
+                for (int i = 0; i < dut; i++)
+                    result.Add(data[lang+"-dut" + i.ToString()]);
+                duty.Add(lang, result);
+            }
             Braz.Models.Vacancy.Update(id, header, descr, url, salary, type, require, duty);
             return Redirect("/Admin/Vacancies");
         }

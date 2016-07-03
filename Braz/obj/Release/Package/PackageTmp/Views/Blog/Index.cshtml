@@ -1,7 +1,13 @@
 ﻿@{
-    ViewBag.Title = "Блог";
+    if ((string)HttpContext.Current.Session["Lang"] == "English")
+    {
+        System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+    }
+    var local = (Dictionary<string, string>)ViewData["Local"];
+    var news = (Dictionary<string, string>)ViewData["News"];
+    ViewBag.Title =local["Title"];
     Layout = "~/Views/Shared/_Layout.cshtml";
-    
+
 }
 <section class="newsList">
     @foreach (Braz.Models.Post post in ((List<Braz.Models.Post>)ViewData["PostList"]).OrderByDescending(x=>x.Date).ToList())
@@ -9,76 +15,19 @@
         <div class="newsBlock" style="background-image: url(/Content/img/news/newsmore/@(post.Id.ToString()).list.jpg);">
             <div class="overlay">
                 <div>
-                    <h5>@post.Header</h5>
+                    <h5>@news["Header-"+post.Id.ToString()]</h5>
                      @{ 
-                               System.Globalization.CultureInfo cult = new System.Globalization.CultureInfo("ru-RU");
                                }
-                              <p style="padding-right: 30px;color: white;">@post.Date.ToString("d MMM yyyy",cult)</p>
-                    <a href="/blog/news?post=@(post.Id)" target="_blank">
+                              <p style="padding-right: 30px;color: white;">@post.Date.ToString("d MMM yyyy",System.Threading.Thread.CurrentThread.CurrentCulture)</p>
+                    <a href="/blog/news?post=@(post.Id.ToString())" target="_blank">
                         <span class="border"></span>
                         <span class="border"></span>
                         <span class="border"></span>
                         <span class="border"></span>
-                        Читать <i class="fa fa-long-arrow-right"></i>
+                        @local["Read"] <i class="fa fa-long-arrow-right"></i>
                     </a>
                 </div>
             </div>
         </div>
     }
-    <!--<div class="newsBlock" style="background-image: url(img/news/newsmore/2.1.jpg);">
-        <div class="overlay">
-            <div>
-                <h5>Алюминий VS Медь</h5>
-                <a href="#">
-                    <span class="border"></span>
-                    <span class="border"></span>
-                    <span class="border"></span>
-                    <span class="border"></span>
-                    Читать <i class="fa fa-long-arrow-right"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-    <div class="newsBlock" style="background-image: url(img/news/newsmore/3.1.jpg);">
-        <div class="overlay">
-            <div>
-                <h5>Услуга «Декорирование алюминиевого профиля»</h5>
-                <a href="#">
-                    <span class="border"></span>
-                    <span class="border"></span>
-                    <span class="border"></span>
-                    <span class="border"></span>
-                    Читать <i class="fa fa-long-arrow-right"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-    <div class="newsBlock" style="background-image: url(img/news/newsmore/4.1.jpg);">
-        <div class="overlay">
-            <div>
-                <h5>Выбор Джеймса Бонда</h5>
-                <a href="#">
-                    <span class="border"></span>
-                    <span class="border"></span>
-                    <span class="border"></span>
-                    <span class="border"></span>
-                    Читать <i class="fa fa-long-arrow-right"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-    <div class="newsBlock" style="background-image: url(img/news/newsmore/5.1.jpg);">
-        <div class="overlay">
-            <div>
-                <h5>Motorolla</h5>
-                <a href="#">
-                    <span class="border"></span>
-                    <span class="border"></span>
-                    <span class="border"></span>
-                    <span class="border"></span>
-                    Читать <i class="fa fa-long-arrow-right"></i>
-                </a>
-            </div>
-        </div>
-    </div>-->
 </section>

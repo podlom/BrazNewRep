@@ -1,6 +1,7 @@
 ﻿@{
+    var local = (Dictionary<string, string>)ViewData["Local"];
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Профиль";
+    ViewBag.Title = local["Title"];
     Braz.Models.User user = Session["User"] as Braz.Models.User;
 }
 <section class="profile_s">
@@ -9,41 +10,41 @@
             <div class="col-md-3">
                 <div class="info_block">
                     <h5>
-                        Информация о пользователе
+                        @(local["UserInfo"])
                         <div class="line"></div>
                     </h5>
-                    <p><span>Имя: </span>@user.Name</p>
+                    <p><span>@local["Name"] </span>@user.Name</p>
                     <p><span>E-Mail: </span>@user.Email</p>
-                    <p><span>Телефон: </span>+38@(user.Phone)</p>
-                    <button data-toggle="modal" data-target="#infoChangeModal">Изменить</button>
+                    <p><span>@local["Phone"] </span>+38@(user.Phone)</p>
+                    <button data-toggle="modal" data-target="#infoChangeModal">@local["Change"]</button>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="cart_block">
-                    <h5>Корзина<div class="line"></div></h5>
+                    <h5>@local["Cart"]<div class="line"></div></h5>
                     <ul>
                         @foreach (Braz.Models.OrderedItem item in user.CurrOrder.Cart)
                         {
-                            <li>@item.Item.Category.Name<span>(@item.AlloyMark, Длина - @(item.Length==null?"0":@item.Length.ToString()) мм, @item.Cover@(item.AdditionalProcessing?", Нужна дополнительная механическая обработка":""))</span></li>
+                            <li>@item.Item.Category.Name<span>(@item.AlloyMark, @local["Length"] - @(item.Length==null?"0":@item.Length.ToString()) мм, @item.Cover@(item.AdditionalProcessing?", Нужна дополнительная механическая обработка":""))</span></li>
                         }
                     </ul>
                     @using (Html.BeginForm("SubmitOrder", "Pages", FormMethod.Post))
                     {
                         <textarea name="comment"></textarea>
-                        <button type="submit">Отправить на просчет</button>
+                        <button type="submit">@local["Send"]</button>
                     }
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="story_block">
                     <h5>
-                        История заказов
+                        @local["Story"]
                         <div class="line"></div>
                     </h5>
                     <ul>
                         @foreach(Braz.Models.Order order in (List<Braz.Models.Order>)ViewData["History"])
                         {
-                            <li><a href="#">Заказ №@order.Id</a></li>
+                            <li><a href="#">@local["Order"] - @order.Id</a></li>
                         }
                     </ul>
                 </div>
@@ -58,17 +59,17 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                <h4 class="modal-title">Изменить данные</h4>
+                <h4 class="modal-title">@local["ChangeData"]</h4>
             </div>
             <div class="modal-body">
                 @using (Html.BeginForm("ChangeUserData", "Pages", FormMethod.Post))
                 {
-                    <input type="text" name="name" placeholder="Новое имя">
-                    <input type="email" name="email" placeholder="Новый E-Mail">
-                    <input type="text" name="phone" placeholder="Новый телефон">
-                    <p>Забыли старый пароль?</p>
-                    <input type="text" name="password" placeholder="Новый пароль">
-                    <input type="submit" value="Изменить">
+                    <input type="text" name="name" placeholder="@local["NewName"]">
+                    <input type="email" name="email" placeholder="@local["NewMail"]">
+                    <input type="text" name="phone" placeholder="@local["NewPhone"]">
+                    <p>@local["Forgot"]?</p>
+                    <input type="text" name="password" placeholder="@local["NewPass"]">
+                    <input type="submit" value="@local["Change"]">
                 }
             </div>
         </div>

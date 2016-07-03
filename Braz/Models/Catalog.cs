@@ -25,7 +25,7 @@ namespace Braz.Models
         //Get Item from DB
         public static Item GetItem(int id)
         {
-            string query = "SELECT items.Id AS ItemID, items.DataSet, categories.Id AS CategoryID, categories.catid, categories.Name, categories.ParamSet FROM items INNER JOIN categories ON items.Category=categories.Id where items.Id=" + id.ToString();
+            string query = "SELECT items.Id AS ItemID, items.DataSet, categories.Id AS CategoryID, categories.catid, localization."+(string)HttpContext.Current.Session["Lang"]+", categories.ParamSet FROM items INNER JOIN categories ON items.Category=categories.Id INNER JOIN localization ON categories.Name=localization.Id where items.Id=" + id.ToString();
             using (DbConnect db = new DbConnect())
             {
                 return db.GetItem(query);
@@ -121,7 +121,7 @@ namespace Braz.Models
 
         static public Item Search(string article)
         {
-            string query = "SELECT items.Id AS ItemID, items.DataSet, categories.Id AS CategoryID, categories.catid, categories.Name, categories.ParamSet FROM items INNER JOIN categories ON items.Category=categories.Id where items.DataSet LIKE '" + article + "|%'";
+            string query = "SELECT items.Id AS ItemID, items.DataSet, categories.Id AS CategoryID, categories.catid, localization." + (string)HttpContext.Current.Session["Lang"] + ", categories.ParamSet FROM items INNER JOIN categories ON items.Category=categories.Id INNER JOIN localization ON categories.Name=localization.Id where items.DataSet LIKE '" + article + "|%'";
             using (DbConnect db = new DbConnect())
             {
                 return db.GetItem(query);
@@ -151,7 +151,7 @@ namespace Braz.Models
         //Get full item list
         public static List<SubCategory> GetCatalog()
         {
-            string query = "SELECT Id,Name,catid FROM categories";
+            string query = "SELECT categories.Id,localization." + (string)HttpContext.Current.Session["Lang"] + ", categories.catid FROM categories LEFT JOIN localization ON categories.Name=localization.Id";
             using (DbConnect db = new DbConnect())
                 return db.GetCatalog(query).OrderBy(x => x.Parent.Id).ToList();
         }
@@ -159,7 +159,7 @@ namespace Braz.Models
         //Get item list for concrete subcategory
         public static List<Item> GetCatList(int id)
         {
-            string query = "SELECT items.Id AS ItemID, items.DataSet, categories.Id AS CategoryID, categories.catid, categories.Name, categories.ParamSet FROM items INNER JOIN categories ON items.Category=categories.Id WHERE items.Category=" + id.ToString();
+            string query = "SELECT items.Id AS ItemID, items.DataSet, categories.Id AS CategoryID, categories.catid, localization." + (string)HttpContext.Current.Session["Lang"] + ", categories.ParamSet FROM items INNER JOIN categories ON items.Category=categories.Id LEFT JOIN localization ON categories.Name=localization.Id WHERE items.Category=" + id.ToString();
             using (DbConnect db = new DbConnect())
             {
                 return db.GetItemList(query);
@@ -169,7 +169,7 @@ namespace Braz.Models
         //Get concrete subcategory object
         public static SubCategory GetSubCategory(int id)
         {
-            string query = "SELECT * FROM categories WHERE Id=" + id.ToString();
+            string query = "SELECT categories.Id,categories.catid, localization." + (string)HttpContext.Current.Session["Lang"] + ",categories.ParamSet,categories.FilterSet,categories.Url FROM categories LEFT JOIN localization ON categories.Name=localization.Id WHERE categories.Id=" + id.ToString();
             using (DbConnect db = new DbConnect())
             {
                 return db.GetSubCategory(query);
@@ -177,7 +177,7 @@ namespace Braz.Models
         }
         public static SubCategory GetSubCategory(string url)
         {
-            string query = "SELECT * FROM categories WHERE Url='" + url+"'";
+            string query = "SELECT categories.Id,categories.catid, localization." + (string)HttpContext.Current.Session["Lang"] + ",categories.ParamSet,categories.FilterSet,categories.Url FROM categories LEFT JOIN localization ON categories.Name=localization.Id WHERE categories.Url='" + url+"';";
             using (DbConnect db = new DbConnect())
             {
                 return db.GetSubCategory(query);
@@ -233,11 +233,11 @@ namespace Braz.Models
         public Category(int id)
         {
             Id = id;
-            Name = ((List<string>)HttpContext.Current.Application["ParentCategories"])[id];
+            Name = ((Dictionary<string,List<string>>)HttpContext.Current.Application["ParentCategories"])[(string)HttpContext.Current.Session["Lang"]][id];
         }
         public static List<SubCategory> GetSubCategories(int id)
         {
-            string query = "SELECT Id,Name FROM categories Where catid = " + id.ToString();
+            string query = "SELECT categories.Id,categories.catid, localization." + (string)HttpContext.Current.Session["Lang"] + ",categories.ParamSet,categories.FilterSet,categories.Url FROM categories LEFT JOIN localization ON categories.Name=localization.Id WHERE categories.catid=" + id.ToString();
             using (DbConnect db = new DbConnect())
             {
                 return db.GetSubCategories(query);

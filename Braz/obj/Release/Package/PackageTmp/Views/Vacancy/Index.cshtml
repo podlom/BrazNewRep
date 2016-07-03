@@ -1,5 +1,7 @@
 ﻿@{
-    ViewBag.Title = "Вакансии";
+    var local = (Dictionary<string, string>)ViewData["Local"];
+    var trans = (Dictionary<string,string>)ViewData["VacTrans"];
+    ViewBag.Title = local["Title"];
     Layout = "~/Views/Shared/_Layout.cshtml";
     List<Braz.Models.Vacancy> data = (List<Braz.Models.Vacancy>)ViewData["Vacancies"];
 }
@@ -7,16 +9,16 @@
         <div class="outer">
             <div class="main-part office">
                 <div class="content">
-                    <h2>Работа в оффисе</h2>
+                    <h2>@local["Office"]</h2>
                     <ul>
                         @foreach(Braz.Models.Vacancy vac in data.Where(x=>x.Type==0))
                         {
                             <li>
                                 <div class="link">
-                                    <a href=@("/Vacancy/Index/"+vac.Url)>@vac.Header</a>
-                                    <span>@vac.Header</span>
+                                    <a href=@("/Vacancy/Index/"+vac.Url)>@trans["Header-" + vac.Id.ToString()]</a>
+                                    <span>@trans["Header-" + vac.Id.ToString()]</span>
                                     <div class="more">
-                                        <div class="text">@vac.Description</div>
+                                        <div class="text">@trans["Description-" + vac.Id.ToString()]</div>
                                     </div>
                                 </div>
                             </li>
@@ -27,16 +29,16 @@
             </div>
             <div class="main-part working">
                 <div class="content">
-                    <h2>Работа на производстве</h2>
+                    <h2>@local["Prod"]</h2>
                     <ul>
                         @foreach (Braz.Models.Vacancy vac in data.Where(x => x.Type == 1))
                         {
                             <li>
                                 <div class="link">
-                                    <a href=@("/Vacancy/Index/"+vac.Url)>@vac.Header</a>
-                                    <span>@vac.Header</span>
+                                    <a href=@("/Vacancy/Index/"+vac.Url)>@trans["Header-" + vac.Id.ToString()]</a>
+                                    <span>@trans["Header-" + vac.Id.ToString()]</span>
                                     <div class="more">
-                                        <div class="text">@vac.Description</div>
+                                        <div class="text">@trans["Description-" + vac.Id.ToString()]</div>
                                     </div>
                                 </div>
                             </li>
@@ -148,75 +150,6 @@
         </div>
     </section> -->
 
-    <footer>
-        <div class="soc_block">
-            <div class="item">
-                <a href="https://www.facebook.com/braz.industries/" target="_blank">
-                    <i class="fa fa-facebook"></i>
-                </a>
-            </div>
-            <div class="item">
-                <a href="">
-                    <i class="fa fa-twitter"></i>
-                </a>
-            </div>
-            <div class="item">
-                <a href="">
-                    <i class="fa fa-linkedin"></i>
-                </a>
-            </div>
-            <div class="item">
-                <a href="https://plus.google.com/108630417052860007244" target="_blank">
-                    <i class="fa fa-google-plus"></i>
-                </a>
-            </div>
-            <div class="item">
-                <a href="https://www.youtube.com/channel/UC1T9si7nLVStmCxWFce942Q" target="_blank">
-                    <i class="fa fa-youtube"></i>
-                </a>
-            </div>
-        </div>
-
-        <div class="copyright">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-4 col-md-offset-4">
-                        Сopyright©2016
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-
 
     <div id="page-preloader"><span class="spinner"></span></div>
 
-
-    <!-- build:js js/vendor.min.js -->
-    <!-- bower:js -->
-    <script src="~/Scripts/bower_components/jquery/dist/jquery.js"></script>
-    <script src="~/Scripts/bower_components/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="~/Scripts/bower_components/owl.carousel/dist/owl.carousel.js"></script>
-    <script src="~/Scripts/bower_components/aos/dist/aos.js"></script>
-    <script src="~/Scripts/bower_components/page-scroll-to-id/jquery.malihu.PageScroll2id.js"></script>
-    <script src="~/Scripts/bower_components/jquery-ui/jquery-ui.js"></script>
-    <script src="~/Scripts/bower_components/chartist/dist/chartist.min.js"></script>
-    <script src="~/Scripts/bower_components/chartist-plugin-pointlabels/dist/chartist-plugin-pointlabels.min.js"></script>
-    <script src="~/Scripts/bower_components/onepage-scroll/jquery.onepage-scroll.js"></script>
-    <!-- endbower -->
-    <!-- endbuild -->
-
-    <script>
-
-    AOS.init({
-        easing: 'ease-out-back',
-        duration: 800
-    });
-
-    </script>
-
-    <!-- build:js js/main.min.js -->
-    <script src="~/Scripts/main.js"></script>
-    <script src="~/Scripts/stat.js"></script>
-    <script src="~/Scripts/buy.js"></script>
-    <!-- endbuild -->

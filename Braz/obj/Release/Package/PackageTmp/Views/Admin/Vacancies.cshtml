@@ -3,9 +3,10 @@
 @{
     ViewBag.Title = "Редактирование вакансий";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var data = (Dictionary<string, Dictionary<int, Dictionary<string, string>>>)ViewData["Local"];
 }
 
-<section>
+<section id="mainsec" data-langcount="@(((List<string>)HttpContext.Current.Application["Languages"]).Count.ToString())">
     <div>
         <h1>Редактирование вакансий</h1>
         <a class="btn btn-danger" style="left:30px;position:fixed;" href="/admin">Назад</a>
@@ -23,23 +24,27 @@
 
                 <div class="block">
                     <form action=@("/Admin/UpdateVacancy?vac="+vac.Id.ToString()+"&req="+vac.Requirements.Count+"&dut="+vac.Duties.Count) method="post" style="text-align:center">
-                        <p>Заголовок -<input name="header" value="@vac.Header" required /></p>
-                        <h5>Описание</h5>
-                        <textarea name="descr" required>@vac.Description</textarea><br />
-                        <p>Зарплата - <input name="salary" value="@vac.Salary" required /></p><br />
+                        @foreach(string lang in (List<string>)HttpContext.Current.Application["Languages"])
+                        {
+                            <h3>@lang</h3>
+                            <p>Заголовок -<input name="@(lang)-header" value="@data[lang][13]["Header-"+vac.Id.ToString()]" required /></p>
+                            <h5>Описание</h5>
+                            <textarea name="@(lang)-descr" required>@data[lang][13]["Description-" + vac.Id.ToString()]</textarea><br />
+                            for (int i = 0; i < data[lang][13]["Requirements-" + vac.Id.ToString()].Split('|').Count(); i++)
+                            {
+                                <p>Требование - <input name=@(lang+"-req"+i.ToString()) required value="@data[lang][13]["Requirements-"+vac.Id.ToString()].Split('|')[i]" /></p>
+                            }
+                            for (int i = 0; i < data[lang][13]["Duties-" + vac.Id.ToString()].Split('|').Count(); i++)
+                            {
+                                <p>Обязанность - <input name=@(lang+"-dut"+i.ToString()) required value="@data[lang][13]["Duties-"+vac.Id.ToString()].Split('|')[i]" /></p>
+                            }
+                        }
+                        <input name="salary" value="@vac.Salary" required style="display:none;"/>
                         <p>Ссылка - <input name="url" value="@vac.Url" required /></p><br />
                         <p>Место - <select name="type" required>
                             <option @(vac.Type==0?"selected":"") >Офис</option>
                             <option @(vac.Type==1?"selected":"")>Производство</option>
                         </select></p>
-                        @for (int i = 0; i < vac.Requirements.Count; i++)
-                        {
-                            <p>Требование - <input name=@("req"+i.ToString()) required value="@vac.Requirements[i]" /></p>
-                        }
-                        @for (int i = 0; i < vac.Duties.Count; i++)
-                        {
-                            <p>Обязанность - <input name=@("dut"+i.ToString()) required value="@vac.Duties[i]" /></p>
-                        }
                         <input type="submit" class="btn btn-success" value="Обновить вакансию" />
                     </form>
                     @Html.ActionLink("Удалить вакансию", "DeleteVacancy", "Admin", new { vacid = vac.Id }, new { @class = "btn btn-danger", @style="width:80%; margin:auto;" })
@@ -56,15 +61,19 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                     <h4 class="modal-title" id="myModalLabel">Добавление вакансии</h4>
                 </div>
                 <div class="modal-body container-fluid">
                     <form id="addvacancyform" action="/admin/AddVacancy" method="post" style="text-align:center">
-                        <input name="header" placeholder="Заголовок" required/><br />
-                        <textarea name="descr" placeholder="Подробнее" required></textarea><br />
+                        @foreach(string lang in (List<string>)HttpContext.Current.Application["Languages"])
+                        {
+                            <h3>@lang</h3>
+                            <input name="@(lang)-header" placeholder="Заголовок" required /><br />
+                            <textarea name="@(lang)-descr" placeholder="Подробнее" required></textarea><br />
+                        }
                         <input name="url" placeholder="Url" required /><br />
-                        <input name="salary" placeholder="Зарплата" required/><br />
+                        <input name="salary" value="0" placeholder="Зарплата" required style="display:none;"/>
                         <select name="type" required>
                             <option>Офис</option>
                             <option>Производство</option>
@@ -79,6 +88,7 @@
 <script src="~/Scripts/vendor.min.js"></script>
 <script>
     $(document).on("click", "#addbutton", function () {
+        var count = $("#mainsec").data("langcount");
         var req = $("#reqinp").val();
         var dut = $("#dutinp").val();
         if (req == "" || dut == "" || req < 0 || dut < 0) {
@@ -86,11 +96,23 @@
             return;
         }
         $("#addvacancyform").attr("action", "/Admin/AddVacancy?req=" + req + "&dut=" + dut);
-        for (var i = 0; i < req; i++) {
-            $("#addvacancyform").append("<input name='req"+i+"' placeholder='Требование' required /><br/>");
-        }
-        for (var i = 0; i < dut; i++) {
-            $("#addvacancyform").append("<input name='dut" + i + "' placeholder='Обязанность' required /><br/>");
+        for(var j=0;j<count;j++)
+        {
+            var name;
+            if (j == 0) {
+                $("#addvacancyform").append("<h3>Русский</h3>");
+                name = "Русский";
+            }
+            else if (j == 1) {
+                $("#addvacancyform").append("<h3>English</h3>");
+                name = "English";
+            }
+            for (var i = 0; i < req; i++) {
+                $("#addvacancyform").append("<input name='"+name+"-req"+i+"' placeholder='Требование' required /><br/>");
+            }
+            for (var i = 0; i < dut; i++) {
+                $("#addvacancyform").append("<input name='"+name+"-dut" + i + "' placeholder='Обязанность' required /><br/>");
+            }
         }
         $("#addvacancyform").append("<input type='submit' class='btn btn-success' value='Добавить вакансию'/>");
         $("#AddVacancy").modal("show");
@@ -109,5 +131,6 @@
     }
     .block{
         padding-top:20px;
+        padding-bottom:20px;
     }
 </style>

@@ -1,11 +1,12 @@
 ﻿@using Braz.Models;
-<button id="catMenuToggler">Выбрать категорию</button>
 @{
-    ViewBag.Title = "Каталог";
+    var local = (Dictionary<string, string>)ViewData["Local"];
+    ViewBag.Title = local["Title"];
     Layout = "~/Views/Shared/_Layout.cshtml";
     List<SubCategory> SubList = (List<SubCategory>)ViewData["CatList"];
     List<int> SoloCategoryList = SubList.Where(x => x.Id == x.Parent.Id).ToList().Select(x => x.Id).ToList();
 }
+<button id="catMenuToggler">@local["ChooseCat"]</button>
 @section PageStyle{
 <link rel="stylesheet" href="~/Content/css/jquery-ui.min.css" />
 }
@@ -53,9 +54,9 @@
 
     </div>
     <div>
-        <h6>Поиск<div class="line"></div></h6>
-        <input id="artseek" type="text" class="form-control" placeholder="Артикул">
-        <button class="btn btn-info" onclick="searcharticle()" style="width:40%;margin-left:30%;">Искать</button><br />
+        <h6>@local["Search"]<div class="line"></div></h6>
+        <input id="artseek" type="text" class="form-control" placeholder="@local["ParamArticle"]">
+        <button class="btn btn-info" onclick="searcharticle()" style="width:40%;margin-left:30%;">@local["Seek"]</button><br />
         <br />
         <div id="filter">
 

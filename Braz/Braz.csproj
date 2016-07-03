@@ -938,6 +938,8 @@
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Admin\Log.cshtml" />
     <Content Include="Views\Admin\Posts.cshtml" />
+    <Content Include="Views\Admin\Settings.cshtml" />
+    <Content Include="Views\Admin\Vacancies.cshtml" />
     <Content Include="Views\Blog\Index.cshtml" />
     <Content Include="Views\Blog\News.cshtml" />
     <Content Include="Views\Catalog\BuyModal.cshtml" />
@@ -952,13 +954,13 @@
     <Content Include="Views\Catalog\NotFound.cshtml" />
     <Content Include="Views\Catalog\TableView.cshtml" />
     <Content Include="Views\Catalog\Test.cshtml" />
+    <Content Include="Views\Pages\chasto_zadavaemye_voprosy.cshtml" />
     <Content Include="Views\Pages\Contacts.cshtml" />
     <Content Include="Views\Pages\FeedbackSended.cshtml" />
     <Content Include="Views\Pages\Group.cshtml" />
     <Content Include="Views\Pages\Index.cshtml" />
     <Content Include="Views\Pages\Production.cshtml" />
     <Content Include="Views\Pages\Profile.cshtml" />
-    <Content Include="Views\Pages\chasto_zadavaemye_voprosy.cshtml" />
     <Content Include="Views\Pages\Services.cshtml" />
     <Content Include="Views\Pages\Statistics.cshtml" />
     <Content Include="Views\Pages\Story.cshtml" />
@@ -966,6 +968,8 @@
     <Content Include="Views\Shared\LogFail.cshtml" />
     <Content Include="Views\Shared\_AdminLayout.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Vacancy\Index.cshtml" />
+    <Content Include="Views\Vacancy\Vacancy.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -995,10 +999,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\PublishProfiles\Ironman333.pubxml" />
-    <Content Include="Views\Admin\Settings.cshtml" />
-    <Content Include="Views\Vacancy\Index.cshtml" />
-    <Content Include="Views\Vacancy\Vacancy.cshtml" />
-    <Content Include="Views\Admin\Vacancies.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

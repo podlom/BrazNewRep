@@ -46,7 +46,6 @@ namespace Braz.Models
         public static User GetUser(int id)
         {
             string query = "SELECT Id,Name,Email,Phone FROM usertable WHERE Id=" + id.ToString();
-            System.Collections.Generic.Dictionary<int, string[]> result;
             using (DbConnect db = new DbConnect())
             {
                 return db.GetUser(query);

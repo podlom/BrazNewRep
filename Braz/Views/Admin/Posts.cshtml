@@ -1,4 +1,5 @@
 ﻿@{
+    var local = (Dictionary<string,Dictionary<int,Dictionary<string, string>>>)ViewData["Local"];
     ViewBag.Title = "Работа с новостями";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
@@ -9,8 +10,11 @@
         <div class="block addition">
             @using (Html.BeginForm("AddPost", "Admin", FormMethod.Post, new { @enctype = "multipart/form-data" }))
             {
-                <input name="title" placeholder="Заголовок" required /><br />
-                <textarea name="text" placeholder="Текст" required></textarea><br />
+                foreach (string lang in (List<string>)HttpContext.Current.Application["Languages"])
+                {
+                <label>@lang<input name="@lang-title" placeholder="Заголовок" required /></label><br />
+                <textarea name="@lang-text" placeholder="Текст" required></textarea><br />
+                }
                 <input id="file" type="file" name="index_image" required />
                 <input id="file2" type="file" name="list_image" required />
                 <input id="file3" type="file" name="post_image" required />
@@ -30,10 +34,14 @@
             {
                 <h1>Новость</h1>
                 <p>ID Новости - @post.Id.ToString()</p><br />
-                <h3>Заголовок</h3><br />
-                <input required name="title" value="@post.Header" /><br />
-                <h3>Текст</h3><br />
-                <p><textarea required name="text">@post.Text.Replace("<br>", "\n")</textarea></p><br />
+                foreach (string lang in (List<string>)HttpContext.Current.Application["Languages"])
+                {
+                    <h2>@lang</h2>
+                    <h3>Заголовок</h3><br />
+                    <input required name="@(lang)-title" value="@local[lang][7]["Header-"+post.Id.ToString()]" /><br />
+                    <h3>Текст</h3><br />
+                    <p><textarea required name="@(lang)-text">@local[lang][7]["Text-"+post.Id.ToString()]</textarea></p><br />
+                }
                 <p style="display:inline">Дата создания - </p><input class="date" name="day" type="number" min="1" max="31" required value="@post.Date.Day.ToString()"/>
                                                               <input class="date" name="month" type="number" min="1" max="12" required value="@post.Date.Month.ToString()" />
                                                               <input class="date" name="year" type="number" required value="@post.Date.Year.ToString()" /><br />   

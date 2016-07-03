@@ -1,32 +1,32 @@
 ﻿@model Braz.Models.Vacancy
 @{
-    ViewBag.Title = Model.Header;
+    var local = (Dictionary<string, string>)ViewData["Local"];
+    ViewBag.Title = local["Header-"+Model.Id.ToString()];
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
     <section id="vacancy">
         <div class="outer">
             <div class="main-content">
-                <h2>@Model.Header</h2>
-                <h3 class="price">@Model.Salary</h3>
+                <h2>@local["Header-"+Model.Id.ToString()]</h2>
                 <div class="desc-name">
-                    <h3>Описание вакансии</h3>
+                    <h3>@local["Description"]</h3>
                 </div>
-                <p class="desc">@Model.Description</p>
+                <p class="desc">@local["Description-" + Model.Id.ToString()]</p>
                 <div class="row">
                     <div class="col-md-12">
-                        <h4>Требования</h4>
+                        <h4>@local["Requirements"]</h4>
                         <ul>
-                            @foreach(string req in Model.Requirements)
+                            @foreach(string req in local["Requirements-" + Model.Id.ToString()].Split('|'))
                             {
                                 <li>@req</li>
                             }
                         </ul>
                     </div>
                     <div class="col-md-12">
-                        <h4>Обязанности</h4>
+                        <h4>@local["Duties"]</h4>
                         <ul>
-                            @foreach(string dut in Model.Duties)
+                            @foreach(string dut in local["Duties-" + Model.Id.ToString()].Split('|'))
                             {
                                 <li>@dut</li>
                             }
@@ -35,74 +35,13 @@
                 </div>
             </div>
             <div class="sidebar">
-                <a href="#">Отправить резюме</a>
-                <div class="drag">Перетащите Ваше резюме сюда</div>
+                <a href="#">@local["SendRes"]</a>
+                <div class="drag">@local["Drag"]</div>
             </div>
         </div>
     </section>
-
-    <footer>
-        <div class="soc_block">
-            <div class="item">
-                <a href="https://www.facebook.com/braz.industries/" target="_blank">
-                    <i class="fa fa-facebook"></i>
-                </a>
-            </div>
-            <div class="item">
-                <a href="">
-                    <i class="fa fa-twitter"></i>
-                </a>
-            </div>
-            <div class="item">
-                <a href="">
-                    <i class="fa fa-linkedin"></i>
-                </a>
-            </div>
-            <div class="item">
-                <a href="https://plus.google.com/108630417052860007244" target="_blank">
-                    <i class="fa fa-google-plus"></i>
-                </a>
-            </div>
-            <div class="item">
-                <a href="https://www.youtube.com/channel/UC1T9si7nLVStmCxWFce942Q" target="_blank">
-                    <i class="fa fa-youtube"></i>
-                </a>
-            </div>
-        </div>
-
-        <div class="copyright">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-4 col-md-offset-4">
-                        Сopyright©2016
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
 
 
     <div id="page-preloader"><span class="spinner"></span></div>
 
 
-
-
-    <!-- build:js js/vendor.min.js -->
-    <!-- bower:js -->
-    <script src="bower_components/jquery/dist/jquery.js"></script>
-    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="bower_components/owl.carousel/dist/owl.carousel.js"></script>
-    <script src="bower_components/aos/dist/aos.js"></script>
-    <script src="bower_components/page-scroll-to-id/jquery.malihu.PageScroll2id.js"></script>
-    <script src="bower_components/jquery-ui/jquery-ui.js"></script>
-    <script src="bower_components/chartist/dist/chartist.min.js"></script>
-    <script src="bower_components/chartist-plugin-pointlabels/dist/chartist-plugin-pointlabels.min.js"></script>
-    <script src="bower_components/onepage-scroll/jquery.onepage-scroll.js"></script>
-    <!-- endbower -->
-    <!-- endbuild -->
-
-    <!-- build:js js/main.min.js -->
-    <script src="js/main.js"></script>
-    <script src="js/stat.js"></script>
-    <script src="js/buy.js"></script>
-    <!-- endbuild -->
